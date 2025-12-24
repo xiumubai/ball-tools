@@ -1,0 +1,99 @@
+<view class="page">
+  <view class="mode">
+    <t-button size="small" theme="default" class="seg {{mode==2?'active':''}}" bindtap="setMode" data-mode="2">2人</t-button>
+    <t-button size="small" theme="default" class="seg {{mode==3?'active':''}}" bindtap="setMode" data-mode="3">3人</t-button>
+  </view>
+  <view class="topbar">
+    <text class="rounds">局数 {{rounds}}</text>
+    <view class="actions">
+      <t-button size="small" style="width: 120rpx;" theme="default" bindtap="openSettings">设置</t-button>
+      <t-button size="small" style="width: 120rpx;" theme="default" disabled="{{history.length==0}}" bindtap="onUndo">撤销</t-button>
+      <t-button size="small" style="width: 120rpx;" theme="default" bindtap="onRestart">重新开始</t-button>
+    </view>
+  </view>
+  <text class="lastop" wx:if="{{lastOpText}}">上一操作：{{lastOpText}}</text>
+
+  <view class="players {{mode==2?'two':'three'}}">
+    <block wx:for="{{players}}" wx:key="id" wx:for-index="idx">
+      <view class="player {{selectedIndex==idx?'selected':''}}" bindtap="onSelectWinner" data-idx="{{idx}}" bindlongpress="onRenameStart" data-idx="{{idx}}">
+        <t-avatar image="{{avatars[idx]}}" size="128rpx" shape="circle"></t-avatar>
+        <text class="name">{{players[idx].name}}</text>
+        <text class="score-num">{{players[idx].score}}</text>
+      </view>
+    </block>
+  </view>
+
+  <view class="ops">
+    <t-button block size="large" theme="danger" bindtap="onOp" data-type="foul">犯规</t-button>
+    <t-button block size="large" theme="primary" bindtap="onOp" data-type="normal">普胜</t-button>
+    <t-button block size="large" theme="primary" bindtap="onOp" data-type="xiaojin">小金</t-button>
+    <t-button block size="large" theme="primary" bindtap="onOp" data-type="dajin">大金</t-button>
+    <t-button block size="large" theme="primary" bindtap="onOp" data-type="huangjin9">黄金9</t-button>
+  </view>
+
+  <view class="stats {{mode==2?'two':'three'}}">
+    <block wx:for="{{players}}" wx:key="id" wx:for-index="idx">
+      <view class="stats-card">
+        <text class="stats-title">{{players[idx].name}}</text>
+        <view class="stats-items {{mode==2?'two':'three'}}">
+          <view class="stat"><text class="stat-label">犯规</text><t-tag size="small" shape="round" variant="light" theme="danger">{{players[idx].counts.foul}}</t-tag></view>
+          <view class="stat"><text class="stat-label">普胜</text><t-tag size="small" shape="round" variant="light" theme="success">{{players[idx].counts.normal}}</t-tag></view>
+          <view class="stat"><text class="stat-label">小金</text><t-tag size="small" shape="round" variant="light" theme="primary">{{players[idx].counts.xiaojin}}</t-tag></view>
+          <view class="stat"><text class="stat-label">大金</text><t-tag size="small" shape="round" variant="light" theme="primary">{{players[idx].counts.dajin}}</t-tag></view>
+          <view class="stat"><text class="stat-label">黄金9</text><t-tag size="small" shape="round" variant="light" theme="primary">{{players[idx].counts.huangjin9}}</t-tag></view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="bottombar">
+    <t-button block size="large" theme="primary" bindtap="onEndMatch">结束比赛</t-button>
+  </view>
+
+  <!-- 设置弹窗 -->
+  <view class="settings-mask" wx:if="{{settingsVisible}}">
+    <view class="settings-dialog">
+      <text class="settings-title">设置追分规则</text>
+      <view class="form-row"><text>犯规</text><input class="num-input" type="number" value="{{rulesForm.foul}}" bindinput="onRuleInput" data-key="foul"/></view>
+      <view class="form-row"><text>普胜</text><input class="num-input" type="number" value="{{rulesForm.normal}}" bindinput="onRuleInput" data-key="normal"/></view>
+      <view class="form-row"><text>小金</text><input class="num-input" type="number" value="{{rulesForm.xiaojin}}" bindinput="onRuleInput" data-key="xiaojin"/></view>
+      <view class="form-row"><text>大金</text><input class="num-input" type="number" value="{{rulesForm.dajin}}" bindinput="onRuleInput" data-key="dajin"/></view>
+      <view class="form-row"><text>黄金9</text><input class="num-input" type="number" value="{{rulesForm.huangjin9}}" bindinput="onRuleInput" data-key="huangjin9"/></view>
+      <view class="settings-actions">
+        <t-button size="large" theme="default" bindtap="closeSettings">取消</t-button>
+        <t-button size="large" theme="primary" bindtap="saveSettings">确定</t-button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 输家选择弹窗（3人模式非黄金9/大金） -->
+  <view class="loser-mask" wx:if="{{loserVisible}}">
+    <view class="loser-dialog">
+      <text class="settings-title">选择输家</text>
+      <view class="loser-items">
+        <block wx:for="{{loserCandidates}}" wx:key="idx">
+          <view class="loser-item {{selectedLoserIndex==item? 'active': ''}}" bindtap="pickLoser" data-idx="{{item}}">
+            <t-avatar image="{{avatars[item]}}" size="96rpx" shape="circle"></t-avatar>
+            <text class="name">{{players[item].name}}</text>
+          </view>
+        </block>
+      </view>
+      <view class="settings-actions">
+        <t-button size="large" theme="default" bindtap="cancelPickLoser">取消</t-button>
+        <t-button size="large" theme="primary" bindtap="confirmPickLoser">确定</t-button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 重命名弹窗 -->
+  <view class="rename-mask" wx:if="{{renameVisible}}">
+    <view class="rename-dialog">
+      <text class="rename-title">修改玩家姓名</text>
+      <input class="rename-input" type="text" placeholder="中文姓名" value="{{renameValue}}" bindinput="onRenameInput" confirm-type="done" />
+      <view class="rename-actions">
+        <t-button size="large" theme="default" bindtap="onRenameCancel">取消</t-button>
+        <t-button size="large" theme="primary" bindtap="onRenameSave">保存</t-button>
+      </view>
+    </view>
+  </view>
+</view>

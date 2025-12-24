@@ -1,7 +1,8 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/fire/fire",
+    "pages/history/history"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -21,7 +22,7 @@
         "selectedIconPath": "images/zhongba_active.png"
       },
       {
-        "pagePath": "pages/logs/logs",
+        "pagePath": "pages/fire/fire",
         "text": "追分",
         "iconPath": "images/zhuifen.png",
         "selectedIconPath": "images/zhuifen_active.png"

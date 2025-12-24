@@ -1,0 +1,91 @@
+<view class="page">
+  <text class="rounds">历史比赛 {{tab=='zhongba'?zhongbaRecords.length:zhuifenRecords.length}}</text>
+  <view class="topbar">
+    <view class="tabbar">
+      <t-button size="small" theme="default" class="seg {{tab=='zhongba'?'active':''}}" bindtap="switchTab" data-kind="zhongba">中八</t-button>
+      <t-button size="small" theme="default" class="seg {{tab=='zhuifen'?'active':''}}" bindtap="switchTab" data-kind="zhuifen">追分</t-button>
+    </view>
+  </view>
+
+  <scroll-view scroll-y style="flex:1">
+    <block wx:if="{{tab=='zhongba'}}">
+      <block wx:for="{{zhongbaRecords}}" wx:key="index">
+        <view class="record">
+          <view class="record-header">
+            <text class="time">比赛时间 {{item.timeText}}</text>
+            <text class="round">总局数 {{item.rounds}}</text>
+          </view>
+          <view class="players">
+            <view class="player player-a">
+              <t-avatar image="{{avatars.A}}" size="128rpx" shape="circle"></t-avatar>
+              <text class="name">{{item.names.A}}</text>
+            </view>
+            <view class="score">
+              <text class="score-num a">{{item.playersA.score}}</text>
+              <text class="dash">-</text>
+              <text class="score-num b">{{item.playersB.score}}</text>
+            </view>
+            <view class="player player-b">
+              <t-avatar image="{{avatars.B}}" size="128rpx" shape="circle"></t-avatar>
+              <text class="name">{{item.names.B}}</text>
+            </view>
+          </view>
+          <view class="stats">
+            <view class="stats-card">
+              <text class="stats-title">{{item.names.A}}</text>
+              <view class="stats-items">
+                <view class="stat"><text class="stat-label">犯规</text><t-tag size="small" shape="round" variant="light" theme="danger">{{item.playersA.foul}}</t-tag></view>
+                <view class="stat"><text class="stat-label">普胜</text><t-tag size="small" shape="round" variant="light" theme="success">{{item.playersA.normal}}</t-tag></view>
+                <view class="stat"><text class="stat-label">接清</text><t-tag size="small" shape="round" variant="light" theme="primary">{{item.playersA.jieqing}}</t-tag></view>
+                <view class="stat"><text class="stat-label">炸清</text><t-tag size="small" shape="round" variant="light" theme="warning">{{item.playersA.zhaqing}}</t-tag></view>
+              </view>
+            </view>
+            <view class="stats-card">
+              <text class="stats-title">{{item.names.B}}</text>
+              <view class="stats-items">
+                <view class="stat"><text class="stat-label">犯规</text><t-tag size="small" shape="round" variant="light" theme="danger">{{item.playersB.foul}}</t-tag></view>
+                <view class="stat"><text class="stat-label">普胜</text><t-tag size="small" shape="round" variant="light" theme="success">{{item.playersB.normal}}</t-tag></view>
+                <view class="stat"><text class="stat-label">接清</text><t-tag size="small" shape="round" variant="light" theme="primary">{{item.playersB.jieqing}}</t-tag></view>
+                <view class="stat"><text class="stat-label">炸清</text><t-tag size="small" shape="round" variant="light" theme="warning">{{item.playersB.zhaqing}}</t-tag></view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </block>
+
+    <block wx:if="{{tab=='zhuifen'}}">
+      <block wx:for="{{zhuifenRecords}}" wx:key="index">
+        <view class="record">
+          <view class="record-header">
+            <text class="time">比赛时间 {{item.timeText}}</text>
+            <text class="round">总局数 {{item.rounds}}</text>
+          </view>
+          <view class="zplayers {{item.mode==2?'two':'three'}}">
+            <block wx:for="{{item.players}}" wx:key="name" wx:for-index="idx" wx:for-item="p">
+              <view class="player">
+                <t-avatar image="{{zhuifenAvatars[idx]}}" size="128rpx" shape="circle"></t-avatar>
+                <text class="name">{{p.name}}</text>
+                <text class="score-num">{{p.score}}</text>
+              </view>
+            </block>
+          </view>
+          <view class="zstats {{item.mode==2?'two':'three'}}">
+            <block wx:for="{{item.players}}" wx:key="name" wx:for-index="idx" wx:for-item="p">
+              <view class="stats-card">
+                <text class="stats-title">{{p.name}}</text>
+                <view class="stats-items {{item.mode==2?'two':'three'}}">
+                  <view class="stat"><text class="stat-label">犯规</text><t-tag size="small" shape="round" variant="light" theme="danger">{{p.counts.foul}}</t-tag></view>
+                  <view class="stat"><text class="stat-label">普胜</text><t-tag size="small" shape="round" variant="light" theme="success">{{p.counts.normal}}</t-tag></view>
+                  <view class="stat"><text class="stat-label">小金</text><t-tag size="small" shape="round" variant="light" theme="primary">{{p.counts.xiaojin}}</t-tag></view>
+                  <view class="stat"><text class="stat-label">大金</text><t-tag size="small" shape="round" variant="light" theme="primary">{{p.counts.dajin}}</t-tag></view>
+                  <view class="stat"><text class="stat-label">黄金9</text><t-tag size="small" shape="round" variant="light" theme="primary">{{p.counts.huangjin9}}</t-tag></view>
+                </view>
+              </view>
+            </block>
+          </view>
+        </view>
+      </block>
+    </block>
+  </scroll-view>
+</view>

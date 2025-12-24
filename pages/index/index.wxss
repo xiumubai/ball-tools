@@ -1,62 +1,224 @@
-/**index.wxss**/
-page {
+page, .page {
   height: 100vh;
   display: flex;
   flex-direction: column;
-}
-.scrollarea {
-  flex: 1;
-  overflow-y: hidden;
+  background: #f7f8fa;
 }
 
-.userinfo {
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 24rpx 32rpx;
+  border-bottom: 2rpx solid #eee;
+  background: #fff;
+}
+.rounds {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #181818;
+  flex: 1;
+}
+
+.lastop {
+  font-size: 24rpx;
+  color: #666;
+  margin-left: 32rpx;
+  margin-top: 32rpx;
+}
+
+.players {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 32rpx;
+  gap: 24rpx;
+}
+.player {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #aaa;
-  width: 80%;
+  gap: 16rpx;
+  padding: 16rpx;
+  border-radius: 16rpx;
 }
-
-.userinfo-avatar {
-  overflow: hidden;
+.player.selected {
+  border: 2rpx solid #0052D9;
+  background: #f0f6ff;
+}
+.avatar {
   width: 128rpx;
   height: 128rpx;
-  margin: 20rpx;
   border-radius: 50%;
+  background: #fff;
 }
-
-.usermotto {
-  margin-top: 200px;
+.name {
+  font-size: 28rpx;
+  color: #333;
 }
-
-.avatar-wrapper {
-  padding: 0;
-  width: 56px !important;
-  border-radius: 8px;
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.avatar {
-  display: block;
-  width: 56px;
-  height: 56px;
-}
-
-.nickname-wrapper {
+.score {
   display: flex;
-  width: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-  border-top: .5px solid rgba(0, 0, 0, 0.1);
-  border-bottom: .5px solid rgba(0, 0, 0, 0.1);
-  color: black;
+  align-items: baseline;
+  gap: 16rpx;
+}
+.score-num {
+  font-size: 72rpx;
+  font-weight: 700;
+  color: #181818;
+}
+.score-num.a { color: #2BA471; }
+.score-num.b { color: #0052D9; }
+.dash {
+  font-size: 56rpx;
+  color: #999;
 }
 
-.nickname-label {
-  width: 105px;
+.tip {
+  padding: 0 32rpx;
+  text-align: center;
+  color: #666;
+  font-size: 24rpx;
 }
 
-.nickname-input {
+.selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+  padding: 0 32rpx 16rpx;
+}
+.seg {
+  border: 2rpx solid #ddd;
+  background: #fff;
+}
+.seg.active {
+  border-color: #0052D9;
+  color: #0052D9;
+}
+
+.ops {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 32rpx 32rpx;
+  gap: 32rpx;
+}
+.btn {
   flex: 1;
+  border-radius: 16rpx;
+  color: #fff;
+}
+.btn:last-child { margin-right: 0; }
+.btn.foul { background: #D54941; }
+.btn.normal { background: #2BA471; }
+.btn.jieqing { background: #0052D9; }
+.btn.zhaqing { background: #FF7D00; }
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+  padding: 16rpx 32rpx;
+}
+.stats-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  padding: 24rpx;
+  background: #fff;
+  border: 2rpx solid #eee;
+  border-radius: 16rpx;
+}
+
+.stats-title {
+  font-size: 28rpx;
+  color: #181818;
+  font-weight: 600;
+}
+.stats-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+}
+.stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8rpx 12rpx;
+  background: #f7f8fa;
+  border-radius: 12rpx;
+}
+.stat-label {
+  font-size: 24rpx;
+  color: #666;
+}
+.stat-value {
+  font-size: 28rpx;
+  color: #181818;
+  font-weight: 600;
+  background: #fff;
+  padding: 4rpx 12rpx;
+  border-radius: 24rpx;
+  border: 2rpx solid #eee;
+}
+
+.bottombar {
+  margin-top: auto;
+  padding: 32rpx;
+  background: #fff;
+  border-top: 2rpx solid #eee;
+}
+.end {
+  width: 100%;
+  height: 88rpx;
+  border-radius: 16rpx;
+}
+
+.rename-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.rename-dialog {
+  width: 560rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+}
+.rename-title {
+  font-size: 28rpx;
+  color: #181818;
+  font-weight: 600;
+  text-align: center;
+  display: block;
+}
+.rename-input {
+  height: 80rpx;
+  border: 2rpx solid #eee;
+  border-radius: 12rpx;
+  padding: 0 16rpx;
+  font-size: 28rpx;
+  margin: 48rpx 0;
+}
+.rename-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+.rename-btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 12rpx;
+}
+.rename-btn.cancel {
+  background: #f7f8fa;
+  color: #333;
 }
