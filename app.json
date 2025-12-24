@@ -5,8 +5,28 @@
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "Weixin",
+    "navigationBarTitleText": "追分王",
     "navigationBarBackgroundColor": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#0052D9",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "中八",
+        "iconPath": "images/zhongba.png",
+        "selectedIconPath": "images/zhongba_active.png"
+      },
+      {
+        "pagePath": "pages/logs/logs",
+        "text": "追分",
+        "iconPath": "images/zhuifen.png",
+        "selectedIconPath": "images/zhuifen_active.png"
+      }
+    ]
   },
   "style": "v2",
   "componentFramework": "glass-easel",
