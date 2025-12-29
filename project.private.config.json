@@ -9,6 +9,20 @@
       "list": [
         {
           "name": "",
+          "pathName": "pages/nine-ball/nine-ball",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/eight-ball/eight-ball",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
           "pathName": "pages/history/history",
           "query": "",
           "launchMode": "default",

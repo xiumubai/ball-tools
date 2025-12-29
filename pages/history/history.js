@@ -1,73 +1,104 @@
-const STORAGE_HISTORY = 'zhongba_match_history'
-const STORAGE_ZHUIFEN_HISTORY = 'zhuifen_match_history'
-const { formatTime } = require('../../utils/util.js')
-
-function ensurePlayer(p) {
-  return p || { score: 0, foul: 0, normal: 0, jieqing: 0, zhaqing: 0 }
-}
+const storage = require('../../utils/storage')
 
 Page({
   data: {
     avatars: {
       A: '/images/zhongba_active.png',
-      B: '/images/zhuifen_active.png',
+      B: '/images/zhongba_active.png',
     },
     zhuifenAvatars: ['/images/zhuifen_active.png','/images/zhuifen_active.png','/images/zhuifen_active.png'],
-    tab: 'zhongba',
-    zhongbaRecords: [],
-    zhuifenRecords: [],
+    filterTab: 'all',
+    matches: [],
+    displayMatches: [],
+    stats: { total: 0, wins: 0, losses: 0, winRate: '0%' },
   },
   onLoad() {
-    this.loadHistory()
+    this.loadData()
   },
-  switchTab(e) {
-    const kind = e.currentTarget.dataset.kind
-    this.setData({ tab: kind })
+  onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setSelected(2)
+    }
   },
-  loadHistory() {
-    let listZ = []
-    try {
-      const h = wx.getStorageSync(STORAGE_HISTORY)
-      if (Array.isArray(h)) listZ = h
-    } catch (e) {}
-    const zhongbaRecords = listZ.map((r) => {
-      const names = r.names || { A: 'A玩家', B: 'B玩家' }
-      const a = ensurePlayer(r.players && r.players[names.A])
-      const b = ensurePlayer(r.players && r.players[names.B])
-      let timeText = ''
-      if (r.finishedAtISO) {
-        timeText = r.finishedAtISO.replace('T', ' ').slice(0, 19)
-      } else if (r.finishedAt) {
-        timeText = formatTime(new Date(r.finishedAt))
-      }
-      return {
-        playersA: a,
-        playersB: b,
-        rounds: r.rounds || 0,
-        timeText,
-        names,
-      }
-    }).reverse()
+  switchFilter(e) {
+    const val = e.currentTarget.dataset.val || 'all'
+    const list = this.filterMatches(val)
+    const stats = this.computeStats(list)
+    this.setData({ filterTab: val, displayMatches: list, stats })
+  },
+  onTabChange(e) {
+    const val = (e.detail && (e.detail.value || e.detail.name)) || 'all'
+    const list = this.filterMatches(val)
+    const stats = this.computeStats(list)
+    this.setData({ filterTab: val, displayMatches: list, stats })
+  },
+  filterMatches(val) {
+    const list = this.data.matches || []
+    if (val === '8ball' || val === 'eight') return list.filter(v => v.type === '8球')
+    if (val === '9ball' || val === 'nine') return list.filter(v => v.type === '9球')
+    return list
+  },
+  loadData() {
+    const eight = storage.eight.getHistory()
+    const nine = storage.nine.getHistory()
 
-    let listF = []
-    try {
-      const hf = wx.getStorageSync(STORAGE_ZHUIFEN_HISTORY)
-      if (Array.isArray(hf)) listF = hf
-    } catch (e) {}
-    const zhuifenRecords = listF.map((r) => {
-      let timeText = ''
-      if (r.finishedAtISO) {
-        timeText = r.finishedAtISO.replace('T', ' ').slice(0, 19)
-      } else if (r.finishedAt) {
-        timeText = formatTime(new Date(r.finishedAt))
-      }
-      return {
-        mode: r.mode === 3 ? 3 : 2,
-        rounds: r.rounds || 0,
-        timeText,
-        players: Array.isArray(r.players) ? r.players : [],
-      }
-    }).reverse()
-    this.setData({ zhongbaRecords, zhuifenRecords })
+    const formatted = []
+
+    eight.forEach((r, idx) => {
+      const names = (r.names) || { A: 'A玩家', B: 'B玩家' }
+      const a = (r.players && (r.players[names.A] || r.players.A)) || { score: 0, foul: 0, normal: 0, jieqing: 0, zhaqing: 0 }
+      const b = (r.players && (r.players[names.B] || r.players.B)) || { score: 0, foul: 0, normal: 0, jieqing: 0, zhaqing: 0 }
+      const ts = r.finishedAt || (r.finishedAtISO ? Date.parse(r.finishedAtISO) : Date.now())
+      const d = new Date(ts)
+      const date = d.toISOString().split('T')[0]
+      const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`
+      formatted.push({
+        id: ts + idx + 10000,
+        ts,
+        type: '8球',
+        date,
+        time,
+        totalRounds: r.rounds || 0,
+        players: [
+          { name: names.A, score: a.score, stats: { normalWin: a.normal, clearWin: a.jieqing, breakClear: a.zhaqing, fouls: a.foul } },
+          { name: names.B, score: b.score, stats: { normalWin: b.normal, clearWin: b.jieqing, breakClear: b.zhaqing, fouls: b.foul } },
+        ],
+      })
+    })
+
+    nine.forEach((r, idx) => {
+      const ts = r.finishedAt || (r.finishedAtISO ? Date.parse(r.finishedAtISO) : Date.now())
+      const d = new Date(ts)
+      const date = d.toISOString().split('T')[0]
+      const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`
+      const players = Array.isArray(r.players) ? r.players.map(p => ({
+        name: p.name,
+        score: p.score,
+        stats: { normalWin: p.counts && p.counts.normal, smallGold: p.counts && p.counts.xiaojin, bigGold: p.counts && p.counts.dajin, golden9: p.counts && p.counts.huangjin9, fouls: p.counts && p.counts.foul }
+      })) : []
+      formatted.push({ id: ts + idx, ts, type: '9球', date, time, totalRounds: r.rounds || 0, players })
+    })
+
+    formatted.sort((a,b) => b.ts - a.ts)
+
+    const stats = this.computeStats(formatted)
+    const display = (this.data.filterTab === 'all') ? formatted : formatted.filter(v => (
+      this.data.filterTab === '8ball' || this.data.filterTab === 'eight') ? v.type === '8球' : v.type === '9球'
+    )
+    this.setData({ matches: formatted, displayMatches: display, stats })
+  },
+  computeStats(list) {
+    const total = (list || []).length
+    let wins = 0
+    let losses = 0
+    (list || []).forEach(m => {
+      const p0 = m.players && m.players[0]
+      const p1 = m.players && m.players[1]
+      if (!p0 || !p1) return
+      if (p0.score > p1.score) wins++
+      else if (p0.score < p1.score) losses++
+    })
+    const winRate = total ? `${Math.round((wins / total) * 100)}%` : '0%'
+    return { total, wins, losses, winRate }
   }
 })

@@ -1,15 +1,20 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/fire/fire",
-    "pages/history/history"
+    "pages/match/match",
+    "pages/history/history",
+    "pages/history-detail/history-detail",
+    "pages/profile/profile",
+    "pages/nine-ball/nine-ball",
+    "pages/eight-ball/eight-ball"
   ],
   "window": {
-    "navigationBarTextStyle": "black",
+    "navigationBarTextStyle": "white",
     "navigationBarTitleText": "追分王",
-    "navigationBarBackgroundColor": "#ffffff"
+    "navigationBarBackgroundColor": "#171a1c"
   },
   "tabBar": {
+    "custom": true,
     "color": "#7A7E83",
     "selectedColor": "#0052D9",
     "backgroundColor": "#ffffff",
@@ -17,13 +22,25 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "中八",
+        "text": "首页",
         "iconPath": "images/zhongba.png",
         "selectedIconPath": "images/zhongba_active.png"
       },
       {
-        "pagePath": "pages/fire/fire",
-        "text": "追分",
+        "pagePath": "pages/match/match",
+        "text": "比赛",
+        "iconPath": "images/zhongba.png",
+        "selectedIconPath": "images/zhongba_active.png"
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "记录",
+        "iconPath": "images/zhongba.png",
+        "selectedIconPath": "images/zhongba_active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
         "iconPath": "images/zhuifen.png",
         "selectedIconPath": "images/zhuifen_active.png"
       }

@@ -1,0 +1,136 @@
+<view class="safe-page">
+  <view class="mode-bar">
+    <view class="round-pill">第 {{rounds}} 局</view>
+    <view class="mode-chip">{{modeLabel}}</view>
+  </view>
+  <view class="timer">
+    <view class="timer-btn" bindtap="onToggleTimer">
+      <t-icon name="play-pause" size="28rpx" />
+      <text class="timer-text">{{timerText}}</text>
+      <text class="timer-state {{isRunning?'danger':'primary'}}">{{isRunning?'暂停':'开始'}}</text>
+    </view>
+  </view>
+
+  <view class="round-pill-container">
+    
+  </view>
+
+  <view class="players-scores">
+    <block wx:for="{{players}}" wx:key="id" wx:for-index="idx">
+      <view class="select-card {{selectedIndex==idx?'selected':''}}" bindtap="onSelectWinner" data-idx="{{idx}}" bindlongpress="onRenameStart" data-idx="{{idx}}">
+        <view class="player-name">{{players[idx].name}}</view>
+        <view class="score-x">{{players[idx].score}}</view>
+      </view>
+    </block>
+  </view>
+
+  <view class="stats {{mode==2?'two':'three'}}">
+    <block wx:for="{{players}}" wx:key="id" wx:for-index="idx">
+      <view class="stats-card {{selectedIndex==idx?'active':''}}">
+        <view class="counts-row">
+          <text class="stat-num destructive">{{players[idx].counts.foul}}</text>
+          <text class="stat-num primary">{{players[idx].counts.normal}}</text>
+          <text class="stat-num amber">{{players[idx].counts.xiaojin}}</text>
+          <text class="stat-num amber">{{players[idx].counts.dajin}}</text>
+          <text class="stat-num amber">{{players[idx].counts.huangjin9}}</text>
+        </view>
+        <view class="labels-row">
+          <text class="stat-label">犯规</text>
+          <text class="stat-label">普胜</text>
+          <text class="stat-label">小金</text>
+          <text class="stat-label">大金</text>
+          <text class="stat-label">黄9</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="ops-grid">
+    <view class="op btn-danger" bindtap="onOp" data-type="foul" disabled="{{!hasStarted}}">犯规</view>
+    <view class="op btn-primary" bindtap="onOp" data-type="normal" disabled="{{!hasStarted}}">普胜</view>
+    <view class="op btn-amber" bindtap="onOp" data-type="xiaojin" disabled="{{!hasStarted}}">小金</view>
+    <view class="op btn-amber" bindtap="onOp" data-type="dajin" disabled="{{!hasStarted}}">大金</view>
+    <view class="op btn-amber" bindtap="onOp" data-type="huangjin9" disabled="{{!hasStarted}}">黄金9</view>
+  </view>
+
+  <view class="actions">
+    <view class="action" bindtap="onUndo" disabled="{{history.length==0}}">
+      <t-icon name="rollback" size="28rpx"></t-icon>
+      撤销
+    </view>
+    <view class="action" bindtap="onRestart">
+      <t-icon name="refresh" size="28rpx"></t-icon>
+      重开
+    </view>
+    <view class="action danger" bindtap="onEndMatch">
+      <t-icon name="stop-circle" size="32rpx"></t-icon>
+      结束
+    </view>
+    <view class="action" bindtap="openSettings">
+      <t-icon name="setting" size="28rpx"></t-icon>
+      设置
+    </view>
+  </view>
+
+  <!-- 设置弹窗 -->
+  <view class="settings-mask" wx:if="{{settingsVisible}}">
+    <view class="settings-dialog">
+      <view class="settings-title">设置追分规则</view>
+      <view class="form-row"><text>犯规</text><input class="num-input" type="number" value="{{rulesForm.foul}}" bindinput="onRuleInput" data-key="foul"/></view>
+      <view class="form-row"><text>普胜</text><input class="num-input" type="number" value="{{rulesForm.normal}}" bindinput="onRuleInput" data-key="normal"/></view>
+      <view class="form-row"><text>小金</text><input class="num-input" type="number" value="{{rulesForm.xiaojin}}" bindinput="onRuleInput" data-key="xiaojin"/></view>
+      <view class="form-row"><text>大金</text><input class="num-input" type="number" value="{{rulesForm.dajin}}" bindinput="onRuleInput" data-key="dajin"/></view>
+      <view class="form-row"><text>黄金9</text><input class="num-input" type="number" value="{{rulesForm.huangjin9}}" bindinput="onRuleInput" data-key="huangjin9"/></view>
+      <view class="settings-actions">
+        <t-button size="large" theme="default" bindtap="closeSettings">取消</t-button>
+        <t-button size="large" theme="primary" bindtap="saveSettings">确定</t-button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 输家选择弹窗（3人模式非黄金9/大金） -->
+  <view class="loser-mask" wx:if="{{loserVisible}}">
+    <view class="loser-dialog">
+      <view class="settings-title">选择输家</view>
+      <view class="loser-items">
+        <block wx:for="{{loserCandidates}}" wx:key="idx">
+          <view class="loser-item {{selectedLoserIndex==item? 'active': ''}}" bindtap="pickLoser" data-idx="{{item}}">
+            <text class="name">{{players[item].name}}</text>
+          </view>
+        </block>
+      </view>
+      <view class="settings-actions">
+        <t-button size="large" theme="default" bindtap="cancelPickLoser">取消</t-button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 赢家选择弹窗（3人模式犯规） -->
+  <view class="loser-mask" wx:if="{{winnerVisible}}">
+    <view class="loser-dialog">
+      <view class="settings-title">选择赢家</view>
+      <view class="loser-items">
+        <block wx:for="{{winnerCandidates}}" wx:key="idx">
+          <view class="loser-item {{selectedWinnerIndex==item? 'active': ''}}" bindtap="pickWinner" data-idx="{{item}}">
+            <text class="name">{{players[item].name}}</text>
+          </view>
+        </block>
+      </view>
+      <view class="settings-actions">
+        <t-button size="large" theme="default" bindtap="cancelPickWinner">取消</t-button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 重命名弹窗 -->
+  <view class="rename-mask" wx:if="{{renameVisible}}">
+    <view class="rename-dialog">
+      <text class="rename-title">修改玩家姓名</text>
+      <input class="rename-input" type="text" placeholder="中文姓名" value="{{renameValue}}" bindinput="onRenameInput" confirm-type="done" />
+      <view class="rename-actions">
+        <t-button size="large" theme="default" bindtap="onRenameCancel">取消</t-button>
+        <t-button size="large" theme="primary" bindtap="onRenameSave">保存</t-button>
+      </view>
+    </view>
+  </view>
+</view>

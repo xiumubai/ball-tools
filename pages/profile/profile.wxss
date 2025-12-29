@@ -1,0 +1,27 @@
+.header{padding:32rpx 32rpx 16rpx}
+.title{font-size:44rpx;font-weight:700;color:#eaeef2}
+.subtitle{margin-top:8rpx;font-size:28rpx;color:#9aa5af}
+.card{margin:24rpx 32rpx;padding:24rpx;border-radius:20rpx;background:#12171d;border:2rpx solid #1c232b;box-shadow:0 6rpx 24rpx rgba(0,0,0,.25)}
+.card-title{display:flex;align-items:center;gap:12rpx;margin-bottom:12rpx}
+.card-title .t-icon{margin-right:4rpx}
+.card-title-text{font-size:32rpx;color:#cdd6dd;font-weight:600}
+.notice{display:flex;gap:16rpx;padding:16rpx;border-radius:16rpx;background:#141a21;border:2rpx solid #1c232b;margin:12rpx 0 20rpx}
+.notice .t-icon{flex-shrink:0}
+.notice-title{font-size:30rpx;color:#eaeef2}
+.notice-desc{margin-top:6rpx;font-size:28rpx;color:#9aa5af}
+.danger-btn{margin-top:8rpx;background:#d94f4f; width: 100%;}
+.danger-btn .t-icon{margin-right:8rpx}
+.danger-btn .btn-text{font-weight:600}
+.about-row{display:flex;align-items:center;justify-content:space-between;padding:20rpx 16rpx;border-top:2rpx solid #1c232b;color:#cdd6dd}
+.about-row:first-of-type{border-top:none}
+.about-key{font-size:30rpx;color:#9aa5af}
+.about-val{font-size:30rpx;color:#cdd6dd}
+.about-link{display:flex;align-items:center;gap:12rpx}
+.arrow{font-size:36rpx;color:#6fb1ff}
+.footer{margin-top:auto;padding:24rpx;text-align:center;color:#9aa5af}
+.copyright{font-size:26rpx}
+.slogan{margin-top:6rpx;font-size:24rpx;color:#5f6b76}
+.icon-db{color:#2BA471}
+.icon-warning{color:#F59E0B}
+.icon-info{color:#6fb1ff}
+.link-icon{color:#6fb1ff}

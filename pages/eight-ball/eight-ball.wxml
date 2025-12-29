@@ -1,0 +1,83 @@
+<view class="safe-page">
+
+  <view class="mode-bar">
+    <view class="mode-chip">{{modeLabel}}</view>
+  </view>
+  <view class="timer">
+    <view class="timer-btn" bindtap="onToggleTimer">
+      <t-icon name="play-pause" size="28rpx" />
+      <text class="timer-text">{{timerText}}</text>
+      <text class="timer-state {{isRunning?'danger':'primary'}}">{{isRunning?'暂停':'开始'}}</text>
+    </view>
+  </view>
+
+  <view class="players-scores">
+    <view class="select-card {{selectedPlayer==='A'?'selected':''}}" bindtap="selectA" bindlongpress="onRenameStart" data-target="A">
+      <view class="player-name">{{names.A}}</view>
+      <view class="score-x {{scoreAnimA}}">{{players.A.score}}</view>
+    </view>
+    <view class="round-pill-container">
+      <view class="round-pill">第 {{players.A.score + players.B.score + 1}} 局</view>
+      <view class="vs">VS</view>
+    </view>
+    <view class="select-card {{selectedPlayer==='B'?'selected':''}}" bindtap="selectB" bindlongpress="onRenameStart" data-target="B">
+      <view class="player-name">{{names.B}}</view>
+      <view class="score-x {{scoreAnimB}}">{{players.B.score}}</view>
+    </view>
+  </view>
+
+  <view class="stats">
+    <view class="stats-card {{selectedPlayer==='A'?'active':''}}">
+      <text class="stats-title">{{names.A}}</text>
+      <view class="stats-items">
+        <view class="stat"><text class="stat-label">普胜</text><text class="stat-num primary">{{players.A.normal}}</text></view>
+        <view class="stat"><text class="stat-label">接清</text><text class="stat-num emerald">{{players.A.jieqing}}</text></view>
+        <view class="stat"><text class="stat-label">炸清</text><text class="stat-num amber">{{players.A.zhaqing}}</text></view>
+        <view class="stat"><text class="stat-label">犯规</text><text class="stat-num destructive">{{players.A.foul}}</text></view>
+      </view>
+    </view>
+    <view class="stats-card {{selectedPlayer==='B'?'active':''}}">
+      <text class="stats-title">{{names.B}}</text>
+      <view class="stats-items">
+        <view class="stat"><text class="stat-label">普胜</text><text class="stat-num primary">{{players.B.normal}}</text></view>
+        <view class="stat"><text class="stat-label">接清</text><text class="stat-num emerald">{{players.B.jieqing}}</text></view>
+        <view class="stat"><text class="stat-label">炸清</text><text class="stat-num amber">{{players.B.zhaqing}}</text></view>
+        <view class="stat"><text class="stat-label">犯规</text><text class="stat-num destructive">{{players.B.foul}}</text></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="ops-grid">
+    <button class="op btn-primary" bindtap="onOp" data-type="normal" disabled="{{!hasStarted}}">普胜</button>
+    <button class="op btn-emerald" bindtap="onOp" data-type="jieqing" disabled="{{!hasStarted}}">接清</button>
+    <button class="op btn-amber" bindtap="onOp" data-type="zhaqing" disabled="{{!hasStarted}}">炸清</button>
+    <button class="op btn-danger" bindtap="onOp" data-type="foul" disabled="{{!hasStarted}}">犯规</button>
+  </view>
+
+  <view class="actions">
+    <view class="action" bindtap="onUndo" disabled="{{history.length==0}}">
+      <t-icon name="rollback" size="28rpx"></t-icon>
+      撤销
+    </view>
+    <view class="action" bindtap="onRestart">
+      <t-icon name="refresh" size="28rpx"></t-icon>
+      重开
+    </view>
+    <view class="action danger" bindtap="onEndMatch">
+      <t-icon name="stop-circle" size="32rpx"></t-icon>
+      结束
+    </view>
+  </view>
+
+  <view class="rename-mask" wx:if="{{renameVisible}}">
+    <view class="rename-dialog">
+      <text class="rename-title">修改玩家姓名</text>
+      <input class="rename-input" type="text" placeholder="请输入中文姓名" value="{{renameValue}}" bindinput="onRenameInput" confirm-type="done" />
+      <view class="rename-actions">
+        <button class="rename-btn cancel" bindtap="onRenameCancel">取消</button>
+        <button class="rename-btn ok" type="primary" bindtap="onRenameSave">保存</button>
+      </view>
+    </view>
+  </view>
+  
+</view>

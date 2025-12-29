@@ -1,0 +1,96 @@
+{
+  "keys": {
+    "description": "全局本地存储键说明",
+    "ongoingMatches": "进行中的比赛列表",
+    "zhongba_match_current": "8球当前状态快照",
+    "zhongba_match_history": "8球历史记录列表",
+    "zhuifen_rules": "9球追分分值规则",
+    "zhuifen_match_current": "9球当前状态快照（包含2人与3人模式）",
+    "zhuifen_match_history": "9球历史记录列表"
+  },
+  "eightBallCurrent": {
+    "description": "8球页面的当前状态快照，便于恢复比赛进度",
+    "fields": {
+      "names": "玩家姓名字典，如 {A: 'A玩家', B: 'B玩家'}",
+      "players": "双方统计（score/normal/jieqing/zhaqing/foul）",
+      "rounds": "已完成的局数（不含正在进行的局）",
+      "history": "操作历史数组（{codePlayer:'A'|'B', type:'normal|jieqing|zhaqing|foul'}）",
+      "elapsedTime": "正计时累计的秒数",
+      "hasStarted": "比赛是否已开始（按钮可用）",
+      "isRunning": "当前是否处于计时运行态（用于恢复时继续累计）",
+      "runningSince": "最近一次开始/恢复计时的时间戳（毫秒），用于补差"
+    },
+    "example": {
+      "names": { "A": "A玩家", "B": "B玩家" },
+      "players": {
+        "A": { "score": 1, "normal": 1, "jieqing": 0, "zhaqing": 0, "foul": 0 },
+        "B": { "score": 0, "normal": 0, "jieqing": 0, "zhaqing": 0, "foul": 0 }
+      },
+      "rounds": 1,
+      "history": [ { "codePlayer": "A", "type": "normal" } ],
+      "elapsedTime": 125,
+      "hasStarted": true,
+      "isRunning": true,
+      "runningSince": 1735468800000
+    }
+  },
+  "eightBallHistoryItem": {
+    "description": "8球历史记录项（结束或保存时写入）",
+    "fields": {
+      "players": "以玩家姓名为键或 A/B 键的统计对象",
+      "rounds": "总局数",
+      "finishedAt": "结束时间戳（毫秒）",
+      "finishedAtISO": "结束时间的 ISO 字符串",
+      "names": "姓名字典（与 players 对应）",
+      "elapsedTime": "本场累计正计时秒数"
+    },
+    "example": {
+      "players": {
+        "A玩家": { "score": 4, "normal": 3, "jieqing": 1, "zhaqing": 0, "foul": 0 },
+        "B玩家": { "score": 2, "normal": 2, "jieqing": 0, "zhaqing": 0, "foul": 1 }
+      },
+      "rounds": 6,
+      "finishedAt": 1735468800000,
+      "finishedAtISO": "2025-12-29T12:00:00.000Z",
+      "names": { "A": "A玩家", "B": "B玩家" },
+      "elapsedTime": 3600
+    }
+  },
+  "nineBallHistoryItem": {
+    "description": "9球追分历史记录项",
+    "fields": {
+      "mode": "人数模式：2 或 3",
+      "rules": "分值规则（foul/normal/xiaojin/dajin/huangjin9）",
+      "rounds": "总局数（犯规不计入）",
+      "finishedAt": "结束时间戳（毫秒）",
+      "finishedAtISO": "结束时间 ISO 字符串",
+      "players": "数组，每项包含 name/score/counts（counts含各项次数）"
+    },
+    "example": {
+      "mode": 2,
+      "rules": { "foul": 1, "normal": 4, "xiaojin": 7, "dajin": 10, "huangjin9": 4 },
+      "rounds": 12,
+      "finishedAt": 1735468800000,
+      "finishedAtISO": "2025-12-29T12:00:00.000Z",
+      "players": [
+        { "name": "玩家A", "score": 108, "counts": { "foul": 0, "normal": 3, "xiaojin": 1, "dajin": 1, "huangjin9": 0 } },
+        { "name": "玩家B", "score": 92, "counts": { "foul": 1, "normal": 2, "xiaojin": 0, "dajin": 0, "huangjin9": 1 } }
+      ]
+    }
+  },
+  "ongoingMatchItem": {
+    "description": "进行中的比赛项，用于比赛大厅展示与续赛",
+    "fields": {
+      "id": "唯一标识（使用时间戳生成）",
+      "mode": "比赛模式文案，如 '中式黑八' 或 '九球追分'",
+      "playersCount": "参赛人数（2 或 3）",
+      "startTime": "开始时间（HH:mm）"
+    },
+    "example": {
+      "id": 1735468800000,
+      "mode": "中式黑八",
+      "playersCount": 2,
+      "startTime": "19:32"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+<view class="custom-tab-bar">
+  <block wx:for="{{list}}" wx:key="pagePath" wx:for-index="index" wx:for-item="item">
+    <view class="tab-item {{selected==index?'active':''}}" bindtap="switchTab" data-index="{{index}}">
+      <t-icon name="{{selected==index ? item.selectedIcon : item.icon}}" size="48rpx"></t-icon>
+      <text class="text">{{item.text}}</text>
+    </view>
+  </block>
+</view>

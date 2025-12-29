@@ -1,18 +1,18 @@
-// pages/index/index.js
+// pages/history-detail/history-detail.js
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    
+
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    
+
   },
 
   /**
@@ -26,9 +26,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setSelected(0)
-    }
+
   },
 
   /**
@@ -63,9 +61,6 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage() {
-    
-  },
-  goMatchBall() {
-    wx.switchTab({ url: '/pages/match/match' })
-  },
+
+  }
 })

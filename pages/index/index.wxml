@@ -1,79 +1,63 @@
-<view class="page">
-  <t-notice-bar visible="{{true}}" prefixIcon="{{false}}" content="长按玩家头像可修改玩家名称">
-    <view slot="prefix-icon">
-      <t-icon name="error-circle-filled"></t-icon>
-    </view>
-  </t-notice-bar>
-  <view class="topbar">
-    <text class="rounds">总局数 {{rounds}}</text>
-    <t-button style="width: 128rpx;" size="small" theme="default" disabled="{{history.length == 0}}" bindtap="onUndo">撤销</t-button>
-    <t-button style="width: 128rpx;" size="small" theme="default" bindtap="onRestart">重新开始</t-button>
-  </view>
-  <text class="lastop" wx:if="{{lastOpText}}">上一操作：{{lastOpText}}</text>
-
-  <view class="players">
-    <view class="player player-a {{selectedPlayer==='A'?'selected':''}}" bindtap="selectA" bindlongpress="onRenameStart" data-target="A">
-      <t-avatar image="{{avatars.A}}" size="128rpx" shape="circle"></t-avatar>
-      <text class="name">{{names.A}}</text>
-    </view>
-
-    <view class="score">
-      <text class="score-num a">{{players.A.score}}</text>
-      <text class="dash">-</text>
-      <text class="score-num b">{{players.B.score}}</text>
-    </view>
-
-    <view class="player player-b {{selectedPlayer==='B'?'selected':''}}" bindtap="selectB" bindlongpress="onRenameStart" data-target="B">
-      <t-avatar image="{{avatars.B}}" size="128rpx" shape="circle"></t-avatar>
-      <text class="name">{{names.B}}</text>
-    </view>
+<view class="safe-page">
+  <view class="header">
+    <view class="title">台球计分器</view>
+    <text class="subtitle">专业的台球比赛记分工具，随时随地记录精彩瞬间</text>
   </view>
 
-  
-
-  <view class="ops">
-    <t-button block size="large" theme="danger" bindtap="onOp" data-type="foul">犯规</t-button>
-    <t-button block size="large" theme="default" bindtap="onOp" data-type="normal">普胜</t-button>
-    <t-button block size="large" theme="light" bindtap="onOp" data-type="jieqing">接清</t-button>
-    <t-button block size="large" theme="primary" bindtap="onOp" data-type="zhaqing">炸清</t-button>
-  </view>
-
-  <view class="rename-mask" wx:if="{{renameVisible}}">
-    <view class="rename-dialog">
-      <text class="rename-title">修改玩家姓名</text>
-      <input class="rename-input" type="text" placeholder="请输入中文姓名" value="{{renameValue}}" bindinput="onRenameInput" confirm-type="done" />
-      <view class="rename-actions">
-        <button class="rename-btn cancel" bindtap="onRenameCancel">取消</button>
-        <button class="rename-btn ok" type="primary" bindtap="onRenameSave">保存</button>
+  <view class="card">
+    <view class="corner"></view>
+    <view class="card-header">
+      <t-icon name="thunder" size="36rpx" color="#fcbb00"></t-icon>
+      <text class="card-title">开始比赛</text>
+    </view>
+    <view class="card-desc">选择一种比赛模式，立即开始记分</view>
+    <view class="mode-list">
+      <view class="mode-btn green" bindtap="goMatchBall" hover-class="green-hover">
+        <view class="mode-content">
+          <view class="badge">8</view>
+          <text class="mode-text">去比赛</text>
+        </view>
+        <t-icon name="chevron-right" size="40rpx" class="arrow"></t-icon>
       </view>
     </view>
   </view>
 
-  <view class="stats">
-    <view class="stats-card">
-      <text class="stats-title">{{names.A}}</text>
-      <view class="stats-items">
-        <view class="stat"><text class="stat-label">犯规</text><t-tag size="small" shape="round" variant="light" theme="danger">{{players.A.foul}}</t-tag></view>
-        <view class="stat"><text class="stat-label">普胜</text><t-tag size="small" shape="round" variant="light" theme="success">{{players.A.normal}}</t-tag></view>
-        <view class="stat"><text class="stat-label">接清</text><t-tag size="small" shape="round" variant="light" theme="primary">{{players.A.jieqing}}</t-tag></view>
-        <view class="stat"><text class="stat-label">炸清</text><t-tag size="small" shape="round" variant="light" theme="warning">{{players.A.zhaqing}}</t-tag></view>
+  <view class="section">
+    <view class="section-title">功能特性</view>
+    <view class="features">
+      <view class="feature-card" hover-class="feature-hover">
+        <view class="feat-content">
+          <t-icon name="chat-double" size="40rpx" color="#2eb873"></t-icon>
+          <text class="feat-title">专业规则</text>
+        </view>
+        <text class="feat-desc">内置标准规则与9球追分规则，支持自定义设置</text>
       </view>
-    </view>
-    <view class="stats-card">
-      <text class="stats-title">{{names.B}}</text>
-      <view class="stats-items">
-        <view class="stat"><text class="stat-label">犯规</text><t-tag size="small" shape="round" variant="light" theme="danger">{{players.B.foul}}</t-tag></view>
-        <view class="stat"><text class="stat-label">普胜</text><t-tag size="small" shape="round" variant="light" theme="success">{{players.B.normal}}</t-tag></view>
-        <view class="stat"><text class="stat-label">接清</text><t-tag size="small" shape="round" variant="light" theme="primary">{{players.B.jieqing}}</t-tag></view>
-        <view class="stat"><text class="stat-label">炸清</text><t-tag size="small" shape="round" variant="light" theme="warning">{{players.B.zhaqing}}</t-tag></view>
+      <view class="feature-card" hover-class="feature-hover">
+        <view class="feat-content">
+          <t-icon name="history" size="40rpx" color="#ff8b1a"></t-icon>
+          <text class="feat-title">历史记录</text>
+        </view>
+        <text class="feat-desc">本地保存比赛记录，随时回顾过去战绩</text>
+      </view>
+      <view class="feature-card" hover-class="feature-hover">
+        <view class="feat-content">
+          <t-icon name="chart-radial" size="40rpx" color="#f5c73d"></t-icon>
+          <text class="feat-title">数据统计</text>
+        </view>
+        <text class="feat-desc">详细的普胜、炸清、接清数据分析</text>
+      </view>
+      <view class="feature-card" hover-class="feature-hover">
+        <view class="feat-content">
+          <t-icon name="usergroup-add" size="40rpx" color="#6fb1ff"></t-icon>
+          <text class="feat-title">多人模式</text>
+        </view>
+        <text class="feat-desc">支持2-3人防守技战，灵活适应不同场景</text>
       </view>
     </view>
   </view>
 
-  <view class="bottombar">
-    <button class="end" type="primary" bindtap="onEndMatch">结束比赛</button>
+  <view class="notice">
+    <t-icon name="info-circle" size="36rpx" color="#ff8b1a"></t-icon>
+    <text class="notice-text">温馨提示：本应用为本地离线模式，所有比赛数据仅保存在当前设备中，清理缓存或重装程序可能会导致数据丢失。</text>
   </view>
-
-  <t-fab icon="icon" button-props="{{fabButton}}" bind:click="handleRecord" />
-
 </view>
