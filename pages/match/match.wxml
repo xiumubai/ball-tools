@@ -5,7 +5,6 @@
   </view>
 
   <view class="new-section">
-    <text class="new-title">新比赛</text>
     <view class="mode-card large" bindtap="startEightBall" hover-class="hover-emerald">
       <view class="iconbox accent-emerald">
         <t-icon name="component-radio" size="32rpx"></t-icon>

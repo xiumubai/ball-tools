@@ -1,11 +1,7 @@
-<view class="page">
-  <text class="rounds text-foreground">历史比赛 {{stats.total}}</text>
-  <t-tabs value="{{filterTab}}" bind:change="onTabChange" class="tabbar" variant="card" size="small">
-    <t-tab-panel value="all" label="全部"></t-tab-panel>
-    <t-tab-panel value="eight" label="中八"></t-tab-panel>
-    <t-tab-panel value="nine" label="追分"></t-tab-panel>
-  </t-tabs>
+<view class="safe-page">
+  
 
+<!-- 统计数据 -->
   <view class="summary">
     <view class="summary-card bg-card border-border glass">
       <text class="summary-value text-foreground">{{stats.total}}</text>
@@ -25,6 +21,14 @@
     </view>
   </view>
 
+  <!-- 自定义tabs -->
+  <view class="seg-tabs">
+    <view class="seg-item {{filterTab=='all'?'active':''}}" data-val="all" bindtap="switchFilter">全部</view>
+    <view class="seg-item {{filterTab=='eight'?'active':''}}" data-val="eight" bindtap="switchFilter">8球</view>
+    <view class="seg-item {{filterTab=='nine'?'active':''}}" data-val="nine" bindtap="switchFilter">9球</view>
+  </view>
+
+
   <block wx:if="{{displayMatches.length==0}}">
     <view class="empty">
       <t-result theme="default" description="暂无比赛记录"></t-result>
@@ -33,78 +37,35 @@
 
   <scroll-view scroll-y style="flex:1">
     <block wx:for="{{displayMatches}}" wx:key="id">
-      <view class="record bg-card border-border glass">
-        <view class="record-header">
-          <t-tag size="small" shape="round" variant="light" theme="{{item.type=='8球'?'success':'warning'}}">{{item.type}}</t-tag>
-          <text class="time text-muted-foreground">{{item.date}} {{item.time}}</text>
-          <text class="round text-muted-foreground">总局数 {{item.totalRounds}}</text>
+      <t-swipe-cell>
+        <view class="record bg-card border-border glass">
+          <view class="record-header">
+            <t-tag size="small" shape="round" variant="light" theme="{{item.type=='8球'?'success':'warning'}}">{{item.type}}</t-tag>
+            <text class="time text-muted-foreground">{{item.date}} {{item.time}}</text>
+            <t-icon name="arrow-right" size="28rpx"></t-icon>
+          </view>
+          <view class="match-row">
+            <view class="side">
+              <text class="score-x {{item.players[0].score>item.players[1].score?'win':''}}">{{item.players[0].score}}</text>
+              <text class="pname {{item.players[0].score>item.players[1].score?'win':''}}">{{item.players[0].name}}</text>
+            </view>
+            <text class="vs">vs</text>
+            <view class="side">
+              <text class="score-x {{item.players[1].score>item.players[0].score?'win':''}}">{{item.players[1].score}}</text>
+              <text class="pname {{item.players[1].score>item.players[0].score?'win':''}}">{{item.players[1].name}}</text>
+            </view>
+            <text class="vs" wx:if="{{item.players.length>2}}">vs</text>
+            <view class="side" wx:if="{{item.players.length>2}}">
+              <text class="score-x {{(item.players[2].score>item.players[0].score && item.players[2].score>item.players[1].score)?'win':''}}">{{item.players[2].score}}</text>
+              <text class="pname {{(item.players[2].score>item.players[0].score && item.players[2].score>item.players[1].score)?'win':''}}">{{item.players[2].name}}</text>
+            </view>
+          </view>
         </view>
-
-        <block wx:if="{{item.type=='8球'}}">
-          <view class="players">
-            <view class="player">
-              <t-avatar image="{{avatars.A}}" size="128rpx" shape="circle"></t-avatar>
-              <text class="name">{{item.players[0].name}}</text>
-            </view>
-            <view class="score">
-              <text class="score-num a">{{item.players[0].score}}</text>
-              <text class="dash">-</text>
-              <text class="score-num b">{{item.players[1].score}}</text>
-            </view>
-            <view class="player">
-              <t-avatar image="{{avatars.B}}" size="128rpx" shape="circle"></t-avatar>
-              <text class="name">{{item.players[1].name}}</text>
-            </view>
-          </view>
-          <view class="stats">
-            <view class="stats-card bg-card border-border glass">
-              <text class="stats-title">{{item.players[0].name}}</text>
-              <view class="stats-items">
-                <view class="stat"><text class="stat-label">犯规</text><t-tag size="small" shape="round" variant="light" theme="danger">{{item.players[0].stats.fouls}}</t-tag></view>
-                <view class="stat"><text class="stat-label">普胜</text><t-tag size="small" shape="round" variant="light" theme="success">{{item.players[0].stats.normalWin}}</t-tag></view>
-                <view class="stat"><text class="stat-label">接清</text><t-tag size="small" shape="round" variant="light" theme="primary">{{item.players[0].stats.clearWin}}</t-tag></view>
-                <view class="stat"><text class="stat-label">炸清</text><t-tag size="small" shape="round" variant="light" theme="warning">{{item.players[0].stats.breakClear}}</t-tag></view>
-              </view>
-            </view>
-            <view class="stats-card bg-card border-border glass">
-              <text class="stats-title">{{item.players[1].name}}</text>
-              <view class="stats-items">
-                <view class="stat"><text class="stat-label">犯规</text><t-tag size="small" shape="round" variant="light" theme="danger">{{item.players[1].stats.fouls}}</t-tag></view>
-                <view class="stat"><text class="stat-label">普胜</text><t-tag size="small" shape="round" variant="light" theme="success">{{item.players[1].stats.normalWin}}</t-tag></view>
-                <view class="stat"><text class="stat-label">接清</text><t-tag size="small" shape="round" variant="light" theme="primary">{{item.players[1].stats.clearWin}}</t-tag></view>
-                <view class="stat"><text class="stat-label">炸清</text><t-tag size="small" shape="round" variant="light" theme="warning">{{item.players[1].stats.breakClear}}</t-tag></view>
-              </view>
-            </view>
-          </view>
-        </block>
-
-        <block wx:elif="{{item.type=='9球'}}">
-          <view class="zplayers {{item.players.length==2?'two':'three'}}">
-            <block wx:for="{{item.players}}" wx:key="name" wx:for-index="idx" wx:for-item="p">
-              <view class="player">
-                <t-avatar image="{{zhuifenAvatars[idx]}}" size="128rpx" shape="circle"></t-avatar>
-                <text class="name">{{p.name}}</text>
-                <text class="score-num">{{p.score}}</text>
-              </view>
-            </block>
-          </view>
-          <view class="zstats {{item.players.length==2?'two':'three'}}">
-            <block wx:for="{{item.players}}" wx:key="name" wx:for-index="idx" wx:for-item="p">
-              <view class="stats-card bg-card border-border glass">
-                <text class="stats-title">{{p.name}}</text>
-                <view class="stats-items {{item.players.length==2?'two':'three'}}">
-                  <view class="stat"><text class="stat-label">犯规</text><t-tag size="small" shape="round" variant="light" theme="danger">{{p.stats.fouls}}</t-tag></view>
-                  <view class="stat"><text class="stat-label">普胜</text><t-tag size="small" shape="round" variant="light" theme="success">{{p.stats.normalWin}}</t-tag></view>
-                  <view class="stat"><text class="stat-label">小金</text><t-tag size="small" shape="round" variant="light" theme="primary">{{p.stats.smallGold}}</t-tag></view>
-                  <view class="stat"><text class="stat-label">大金</text><t-tag size="small" shape="round" variant="light" theme="primary">{{p.stats.bigGold}}</t-tag></view>
-                  <view class="stat"><text class="stat-label">黄金9</text><t-tag size="small" shape="round" variant="light" theme="primary">{{p.stats.golden9}}</t-tag></view>
-                </view>
-              </view>
-            </block>
-          </view>
-        </block>
-
-      </view>
+        <view slot="right" class="swipe-right delete" data-id="{{item.id}}" data-type="{{item.type}}" data-ts="{{item.ts}}" bindtap="onSwipeDelete">
+          <t-icon name="delete" size="28rpx"></t-icon>
+          <text>删除</text>
+        </view>
+      </t-swipe-cell>
     </block>
   </scroll-view>
 </view>

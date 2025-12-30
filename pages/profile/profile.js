@@ -36,8 +36,7 @@ Page({
       cancelText: '取消',
       success: (res) => {
         if (res.confirm) {
-          const keys = ['zhongba_match_history','zhongba_match_current','zhuifen_match_history','zhuifen_match_current','zhuifen_rules']
-          try { keys.forEach(k => wx.removeStorageSync(k)) } catch(e) {}
+          try { wx.clearStorageSync() } catch(e) {}
           wx.showToast({ title: '已清除', icon: 'none' })
         }
       }

@@ -30,7 +30,6 @@
 .empty-icon{color:#6fb1ff}
 .empty-text{font-size:28rpx;color:#9aa5af}
 .new-section{margin:24rpx 0}
-.new-title{padding:0 32rpx;font-size:28rpx;color:#eaeef2;font-weight:700;margin:16rpx 12rpx}
 .mode-card.large{position:relative;margin:0 32rpx;padding:20rpx;border-radius:20rpx;background:#12171d;border:2rpx solid #1c232b;display:flex;align-items:center;gap:16rpx;overflow:hidden;box-shadow:0 8rpx 18rpx rgba(0,0,0,.28);transition:box-shadow .2s ease,background .2s ease,transform .2s ease}
 .mode-card.large .feat-icon{color:#2eb873}
 .mode-card.large .content{display:flex;flex-direction:column}

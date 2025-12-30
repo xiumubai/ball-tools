@@ -19,6 +19,7 @@ Page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setSelected(2)
     }
+    this.loadData()
   },
   switchFilter(e) {
     const val = e.currentTarget.dataset.val || 'all'
@@ -42,6 +43,8 @@ Page({
     const eight = storage.eight.getHistory()
     const nine = storage.nine.getHistory()
 
+    console.log(eight, nine);
+    
     const formatted = []
 
     eight.forEach((r, idx) => {
@@ -88,17 +91,43 @@ Page({
     this.setData({ matches: formatted, displayMatches: display, stats })
   },
   computeStats(list) {
-    const total = (list || []).length
+    const validList = Array.isArray(list) ? list : []
+    const total = validList.length
     let wins = 0
     let losses = 0
-    (list || []).forEach(m => {
-      const p0 = m.players && m.players[0]
-      const p1 = m.players && m.players[1]
-      if (!p0 || !p1) return
-      if (p0.score > p1.score) wins++
-      else if (p0.score < p1.score) losses++
+    validList.forEach(m => {
+      const players = Array.isArray(m.players) ? m.players : []
+      const p0 = players[0]
+      const p1 = players[1]
+      if (p0 && p1 && typeof p0.score === 'number' && typeof p1.score === 'number') {
+        if (p0.score > p1.score) wins++
+        else if (p0.score < p1.score) losses++
+      }
     })
     const winRate = total ? `${Math.round((wins / total) * 100)}%` : '0%'
     return { total, wins, losses, winRate }
+  },
+  onPullDownRefresh() {
+    this.loadData()
+    wx.stopPullDownRefresh()
+  },
+  onSwipeDelete(e) {
+    const id = e.currentTarget.dataset.id
+    const ts = Number(e.currentTarget.dataset.ts)
+    const type = e.currentTarget.dataset.type
+    if (!ts || !type) return
+    wx.showModal({
+      title: '删除记录',
+      content: '确认删除该比赛记录？',
+      confirmText: '删除',
+      cancelText: '取消',
+      success: (res) => {
+        if (!res.confirm) return
+        if (type === '8球') storage.eight.removeHistoryByTs(ts)
+        else storage.nine.removeHistoryByTs(ts)
+        this.loadData()
+        wx.showToast({ title: '已删除', icon: 'none' })
+      }
+    })
   }
 })

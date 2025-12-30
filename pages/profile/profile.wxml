@@ -1,4 +1,4 @@
-<view>
+<view class="safe-page">
   <view class="header">
     <view class="title">设置与关于</view>
     <text class="subtitle">管理您的本地数据和应用偏好设置</text>

@@ -54,8 +54,9 @@ page, .page { height: 100vh; display: flex; flex-direction: column; background: 
 .form-row text { color: #fff;}
 .num-input { height: 80rpx; border: 2rpx solid #1c232b; border-radius: 12rpx; padding: 0 16rpx; font-size: 28rpx; width: 240rpx; text-align: right; background:#141a21; color:#eaeef2 }
 .settings-actions, .rename-actions { display: flex; gap: 16rpx; margin-top: 16rpx; }
-.loser-items { display: grid; grid-template-columns: 1fr 1fr; gap: 64rpx; margin: 48rpx 0;}
-.loser-item { display: flex; flex-direction: column; align-items: center; gap: 12rpx; padding: 16rpx; border: 2rpx solid #1c232b; border-radius: 12rpx; background:#141a21; }
+.loser-items { display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx; justify-items: center; align-items: center; padding: 80rpx 0;}
+.loser-item { width: 160rpx; height: 160rpx; display: flex; align-items: center; justify-content: center; border: 2rpx solid #1c232b; border-radius: 50%; background:#fe6e00; }
+.loser-item .name { color: #fff;}
 .loser-item.active { border-color: #2eb873; box-shadow: 0 8rpx 16rpx rgba(46,184,115,.22); }
 
 .counts-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8rpx; margin: 12rpx 0 6rpx; }

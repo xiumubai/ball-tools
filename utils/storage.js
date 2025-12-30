@@ -34,7 +34,17 @@ const eight = {
   getCurrentById(id) { if (!id) return this.getCurrent(); return safeGet(`${KEYS.eightCurrent}_${id}`) || null },
   setCurrentById(id, obj) { if (!id) return this.setCurrent(obj); const k = `${KEYS.eightCurrent}_${id}`; if (obj == null) safeRemove(k); else safeSet(k, obj) },
   getHistory() { return ensureArray(safeGet(KEYS.eightHistory) || []) },
-  addHistory(record) { const hist = this.getHistory(); hist.push(record); safeSet(KEYS.eightHistory, hist); return hist }
+  setHistory(list) { safeSet(KEYS.eightHistory, Array.isArray(list) ? list : []) },
+  addHistory(record) { const hist = this.getHistory(); hist.push(record); safeSet(KEYS.eightHistory, hist); return hist },
+  removeHistoryByTs(ts) {
+    const hist = this.getHistory()
+    const filtered = hist.filter(r => {
+      const t = r && (r.finishedAt || (r.finishedAtISO ? Date.parse(r.finishedAtISO) : 0))
+      return t !== ts
+    })
+    this.setHistory(filtered)
+    return filtered
+  }
 }
 
 const nine = {
@@ -43,7 +53,17 @@ const nine = {
   getCurrentById(id) { if (!id) return this.getCurrent(); return safeGet(`${KEYS.nineCurrent}_${id}`) || null },
   setCurrentById(id, obj) { if (!id) return this.setCurrent(obj); const k = `${KEYS.nineCurrent}_${id}`; if (obj == null) safeRemove(k); else safeSet(k, obj) },
   getHistory() { return ensureArray(safeGet(KEYS.nineHistory) || []) },
-  addHistory(record) { const hist = this.getHistory(); hist.push(record); safeSet(KEYS.nineHistory, hist); return hist }
+  setHistory(list) { safeSet(KEYS.nineHistory, Array.isArray(list) ? list : []) },
+  addHistory(record) { const hist = this.getHistory(); hist.push(record); safeSet(KEYS.nineHistory, hist); return hist },
+  removeHistoryByTs(ts) {
+    const hist = this.getHistory()
+    const filtered = hist.filter(r => {
+      const t = r && (r.finishedAt || (r.finishedAtISO ? Date.parse(r.finishedAtISO) : 0))
+      return t !== ts
+    })
+    this.setHistory(filtered)
+    return filtered
+  }
 }
 
 const rules = {

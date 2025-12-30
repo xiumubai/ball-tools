@@ -3,8 +3,8 @@
     "t-avatar": "tdesign-miniprogram/avatar/avatar",
     "t-tag": "tdesign-miniprogram/tag/tag",
     "t-button": "tdesign-miniprogram/button/button",
-    "t-tabs": "tdesign-miniprogram/tabs/tabs",
-    "t-tab-panel": "tdesign-miniprogram/tab-panel/tab-panel",
-    "t-result": "tdesign-miniprogram/result/result"
+    "t-result": "tdesign-miniprogram/result/result",
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "t-swipe-cell": "tdesign-miniprogram/swipe-cell/swipe-cell"
   }
 }
