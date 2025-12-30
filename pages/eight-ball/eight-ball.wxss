@@ -188,7 +188,7 @@
   border-radius: 12rpx;
 }
 .rename-btn.cancel {
-  background: #141a21;
+  background: #fff;
   border: 2rpx solid #1c232b;
-  color: #cdd6dd;
+  color: #1c232b;
 }

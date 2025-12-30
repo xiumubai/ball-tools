@@ -23,6 +23,7 @@
       </view>
     </block>
   </view>
+  <view class="tip">长按玩家姓名可以修改</view>
 
   <view class="stats {{mode==2?'two':'three'}}">
     <block wx:for="{{players}}" wx:key="id" wx:for-index="idx">

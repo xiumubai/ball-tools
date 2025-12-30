@@ -15,6 +15,12 @@
 
 .ops { display: flex; gap: 12rpx; padding: 0 32rpx; margin-top: 8rpx; }
 
+.tip {
+  padding: 0 32rpx;
+  text-align: center;
+  color: #9aa5af;
+  font-size: 28rpx;
+}
 .stats { display: grid; gap: 16rpx; padding: 16rpx 32rpx; }
 .stats.two { grid-template-columns: repeat(2, 1fr); }
 .stats.three { grid-template-columns: repeat(3, 1fr); }
