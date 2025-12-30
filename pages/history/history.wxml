@@ -31,7 +31,8 @@
 
   <block wx:if="{{displayMatches.length==0}}">
     <view class="empty">
-      <t-result theme="default" description="暂无比赛记录"></t-result>
+      <t-icon name="no-result" size="100rpx"></t-icon>
+      <view>暂无比赛记录</view>
     </view>
   </block>
 

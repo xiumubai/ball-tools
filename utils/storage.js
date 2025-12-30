@@ -21,6 +21,25 @@ function safeRemove(key) {
 
 function ensureArray(v) { return Array.isArray(v) ? v : [] }
 
+function cleanupOrphans() {
+  let keys = []
+  try { const info = wx.getStorageInfoSync(); keys = info && info.keys ? info.keys : [] } catch (e) { keys = [] }
+  const list = ongoing.getList()
+  const ids = new Set((Array.isArray(list) ? list : []).map(v => v && v.id))
+  const prefixEight = `${KEYS.eightCurrent}_`
+  const prefixNine = `${KEYS.nineCurrent}_`
+  keys.forEach(k => {
+    if (typeof k !== 'string') return
+    if (k.indexOf(prefixEight) === 0) {
+      const id = Number(k.slice(prefixEight.length))
+      if (!ids.has(id)) safeRemove(k)
+    } else if (k.indexOf(prefixNine) === 0) {
+      const id = Number(k.slice(prefixNine.length))
+      if (!ids.has(id)) safeRemove(k)
+    }
+  })
+}
+
 const ongoing = {
   getList() { return ensureArray(safeGet(KEYS.ongoingMatches) || []) },
   setList(list) { safeSet(KEYS.ongoingMatches, Array.isArray(list) ? list : []) },
@@ -74,4 +93,4 @@ const rules = {
   setNineRules(r) { safeSet(KEYS.nineRules, r) }
 }
 
-module.exports = { keys: KEYS, get: safeGet, set: safeSet, remove: safeRemove, ongoing, eight, nine, rules }
+module.exports = { keys: KEYS, get: safeGet, set: safeSet, remove: safeRemove, ongoing, eight, nine, rules, cleanupOrphans }

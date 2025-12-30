@@ -62,7 +62,7 @@
   font-size: 28rpx;
 }
 
-.empty { margin: 64rpx 0; display: flex; justify-content: center; }
+.empty { height: 500rpx; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 32rpx; }
 
 .record {
   padding: 24rpx;

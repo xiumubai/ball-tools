@@ -334,6 +334,7 @@ Page({
             storage.ongoing.removeById(id)
             storage.nine.setCurrentById(id, null)
             storage.nine.setCurrent(null)
+            storage.cleanupOrphans()
           }
           storage.nine.addHistory(record)
           const init = initState(this.data.mode)
@@ -357,6 +358,7 @@ Page({
       storage.ongoing.removeById(this.data.matchId)
       storage.nine.setCurrentById(this.data.matchId, null)
       storage.nine.setCurrent(null)
+      storage.cleanupOrphans()
     }
     const players = this.data.players.map(p => ({ ...p, score: 100, counts: { foul: 0, normal: 0, xiaojin: 0, dajin: 0, huangjin9: 0 } }))
     this.stopTimer()
@@ -366,6 +368,7 @@ Page({
   },
   startTimer() {
     if (this._timer) return
+    storage.cleanupOrphans()
     let id = this.data.matchId
     if (!id) {
       id = Date.now()

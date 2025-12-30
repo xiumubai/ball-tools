@@ -122,6 +122,7 @@ Page({
   },
   startTimer() {
     if (this._timer) return
+    storage.cleanupOrphans()
     let id = this.data.matchId
     if (!id) {
       id = Date.now()
@@ -282,6 +283,7 @@ Page({
             storage.ongoing.removeById(id)
             storage.eight.setCurrentById(id, null)
             storage.eight.setCurrent(null)
+            storage.cleanupOrphans()
             const record = {
               players: {
                 [names.A]: playersSnap.A,
@@ -329,6 +331,7 @@ Page({
       storage.ongoing.removeById(id)
       storage.eight.setCurrentById(id, null)
       storage.eight.setCurrent(null)
+      storage.cleanupOrphans()
     }
     const resetPlayers = initPlayers()
     this.stopTimer()
