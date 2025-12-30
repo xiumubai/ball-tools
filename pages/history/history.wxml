@@ -38,7 +38,7 @@
   <scroll-view scroll-y style="flex:1">
     <block wx:for="{{displayMatches}}" wx:key="id">
       <t-swipe-cell>
-        <view class="record bg-card border-border glass">
+        <view class="record bg-card border-border glass" bindtap="openDetail" data-type="{{item.type}}" data-ts="{{item.ts}}">
           <view class="record-header">
             <t-tag size="small" shape="round" variant="light" theme="{{item.type=='8球'?'success':'warning'}}">{{item.type}}</t-tag>
             <text class="time text-muted-foreground">{{item.date}} {{item.time}}</text>
@@ -46,18 +46,18 @@
           </view>
           <view class="match-row">
             <view class="side">
-              <text class="score-x {{item.players[0].score>item.players[1].score?'win':''}}">{{item.players[0].score}}</text>
-              <text class="pname {{item.players[0].score>item.players[1].score?'win':''}}">{{item.players[0].name}}</text>
+              <text class="score-x">{{item.players[0].score}}</text>
+              <text class="pname">{{item.players[0].name}}</text>
             </view>
             <text class="vs">vs</text>
             <view class="side">
-              <text class="score-x {{item.players[1].score>item.players[0].score?'win':''}}">{{item.players[1].score}}</text>
-              <text class="pname {{item.players[1].score>item.players[0].score?'win':''}}">{{item.players[1].name}}</text>
+              <text class="score-x">{{item.players[1].score}}</text>
+              <text class="pname">{{item.players[1].name}}</text>
             </view>
             <text class="vs" wx:if="{{item.players.length>2}}">vs</text>
             <view class="side" wx:if="{{item.players.length>2}}">
-              <text class="score-x {{(item.players[2].score>item.players[0].score && item.players[2].score>item.players[1].score)?'win':''}}">{{item.players[2].score}}</text>
-              <text class="pname {{(item.players[2].score>item.players[0].score && item.players[2].score>item.players[1].score)?'win':''}}">{{item.players[2].name}}</text>
+              <text class="score-x">{{item.players[2].score}}</text>
+              <text class="pname">{{item.players[2].name}}</text>
             </view>
           </view>
         </view>

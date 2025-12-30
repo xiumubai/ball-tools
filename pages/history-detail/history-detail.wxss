@@ -1,1 +1,26 @@
-/* pages/history-detail/history-detail.wxss */
+.card { margin: 24rpx 32rpx; padding: 24rpx; border-radius: 16rpx }
+.card-header { display:flex; align-items:center; justify-content: space-between; margin-bottom: 16rpx }
+.time { font-size: 28rpx; color: #9aa5af }
+.players { display:grid; gap: 24rpx; padding: 16rpx 0 }
+.players.two { grid-template-columns: repeat(2, 1fr) }
+.players.three { grid-template-columns: repeat(3, 1fr) }
+.p { display:flex; flex-direction: column; align-items: center; gap: 12rpx }
+.circle-large { width: 120rpx; height: 120rpx; border-radius: 999rpx; background: rgba(255,255,255,.06); border: 2rpx solid rgba(255,255,255,.08); color:#9aa5af; display:flex; align-items:center; justify-content:center; font-size: 28rpx }
+.pname { font-size: 28rpx; color: #9aa5af; font-weight: 600 }
+.score-x { font-size: 56rpx; font-weight: 900; color: #eaeef2 }
+.win { color: #2eb873; border-color: #f5c73d }
+.round { display:block; text-align:center; padding: 8rpx 0 }
+
+.seg-tabs { margin: 0 32rpx 16rpx; display:flex; align-items:center; gap:12rpx; background: rgba(255,255,255,0.06); border-radius: 999rpx; padding: 8rpx }
+.seg-item { flex:1; text-align:center; padding: 16rpx 24rpx; border-radius: 999rpx; color:#eaeef2; font-size: 26rpx; font-weight: 600 }
+.seg-item.active { background:#2eb873; color:#fff }
+
+.table { margin: 0 32rpx 24rpx; padding: 16rpx; border-radius: 16rpx }
+.tr { display:grid; grid-template-columns: 1.2fr repeat(3, 1fr); gap: 12rpx; align-items:center; padding: 12rpx 8rpx }
+.tr.header { font-weight: 700 }
+.th { color: #eaeef2; font-size: 26rpx }
+.th-center { text-align: center }
+.td.label { color:#9aa5af; font-size: 24rpx }
+.td.val { color:#eaeef2; font-size: 26rpx; text-align:center; }
+.card-gen { margin: 0 32rpx; padding: 24rpx; border-radius: 16rpx; display:flex; align-items:center; justify-content:center }
+.tip { font-size: 26rpx }

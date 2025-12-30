@@ -2,11 +2,6 @@ const storage = require('../../utils/storage')
 
 Page({
   data: {
-    avatars: {
-      A: '/images/zhongba_active.png',
-      B: '/images/zhongba_active.png',
-    },
-    zhuifenAvatars: ['/images/zhuifen_active.png','/images/zhuifen_active.png','/images/zhuifen_active.png'],
     filterTab: 'all',
     matches: [],
     displayMatches: [],
@@ -43,8 +38,6 @@ Page({
     const eight = storage.eight.getHistory()
     const nine = storage.nine.getHistory()
 
-    console.log(eight, nine);
-    
     const formatted = []
 
     eight.forEach((r, idx) => {
@@ -110,6 +103,12 @@ Page({
   onPullDownRefresh() {
     this.loadData()
     wx.stopPullDownRefresh()
+  },
+  openDetail(e) {
+    const ts = Number(e.currentTarget.dataset.ts)
+    const type = e.currentTarget.dataset.type
+    if (!ts || !type) return
+    wx.navigateTo({ url: `/pages/history-detail/history-detail?ts=${ts}&type=${encodeURIComponent(type)}` })
   },
   onSwipeDelete(e) {
     const id = e.currentTarget.dataset.id
