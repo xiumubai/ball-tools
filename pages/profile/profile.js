@@ -65,6 +65,9 @@ Page({
   goTraining() {
     wx.navigateTo({ url: '/pages/training/index' })
   },
+  goTactic() {
+    wx.navigateTo({ url: '/pages/tactic/index' })
+  },
   onCopyRepo() {
     wx.setClipboardData({ data: this.data.repoUrl, success: () => { wx.showToast({ title: '链接已复制', icon: 'none' }) } })
   },

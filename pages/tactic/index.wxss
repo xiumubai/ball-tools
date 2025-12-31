@@ -1,0 +1,386 @@
+page {
+  background-color: #1a1a1a;
+  /* 地毯纹理 */
+  background-image: 
+    radial-gradient(#222 15%, transparent 16%),
+    radial-gradient(#222 15%, transparent 16%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: flex-start; /* 改为顶部对齐 */
+  padding-top: 40rpx; /* 增加顶部边距，使球桌不至于顶到最上面 */
+}
+
+/* 顶部 Undo 按钮 */
+.top-toolbar {
+  position: fixed;
+  top: calc(100vh - 70%);
+  left: 10rpx;
+  z-index: 90; /* 低于抽屉 */
+}
+
+.undo-btn {
+  background: rgba(43, 43, 43, 0.5);
+  padding: 16rpx 24rpx;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  color: #fff;
+  font-size: 24rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.3);
+}
+
+.undo-btn:active {
+  background: rgba(43, 43, 43, 0.7);
+  transform: scale(0.95);
+}
+
+/* 左侧抽屉式工具栏 */
+.sidebar-drawer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+  pointer-events: none; /* 默认不拦截，让toggle按钮拦截 */
+  display: flex;
+  align-items: center; /* 垂直居中对齐toggle */
+}
+
+.sidebar-drawer.expanded {
+  pointer-events: auto; /* 展开后拦截所有点击 */
+  background: rgba(0,0,0,0.5); /* 遮罩层效果可选 */
+  width: 100%; /* 全屏遮罩 */
+}
+
+/* 触发按钮 */
+.drawer-toggle {
+  width: 60rpx;
+  height: 100rpx;
+  background: rgba(43, 43, 43, 0.5);
+  border-top-right-radius: 16rpx;
+  border-bottom-right-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto; /* 必须开启 */
+  box-shadow: 4rpx 0 10rpx rgba(0,0,0,0.3);
+}
+
+/* 抽屉内容区域 */
+.drawer-content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 160rpx; /* 较窄的侧边栏 */
+  background: #2b2b2b;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4rpx 0 20rpx rgba(0,0,0,0.5);
+  pointer-events: auto;
+}
+
+.sidebar-drawer.expanded .drawer-content {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1rpx solid rgba(255,255,255,0.1);
+}
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20rpx 0;
+}
+
+.tool-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 22rpx;
+  color: #888;
+  margin-bottom: 16rpx;
+}
+
+.tool-btn {
+  width: 100rpx;
+  height: 100rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+  border-radius: 16rpx;
+  color: #ccc;
+  font-size: 22rpx;
+  gap: 8rpx;
+  background: #3e3e3e;
+}
+
+.tool-btn.active {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3B82F6;
+  border: 1rpx solid rgba(59, 130, 246, 0.5);
+}
+
+/* 画线模式下的子选项 */
+.sub-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-top: -10rpx;
+  margin-bottom: 16rpx;
+  background: rgba(0,0,0,0.2);
+  padding: 12rpx;
+  border-radius: 12rpx;
+}
+
+.sub-btn {
+  width: 80rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+  color: #999;
+  border-radius: 8rpx;
+  background: rgba(255,255,255,0.05);
+}
+
+.sub-btn.active {
+  background: #3B82F6;
+  color: #fff;
+}
+
+
+.divider {
+  height: 1rpx;
+  background: rgba(255,255,255,0.1);
+  margin: 10rpx 20rpx 30rpx;
+}
+
+/* 球网格 */
+.ball-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 两列 */
+  gap: 16rpx;
+  padding: 0 16rpx;
+}
+
+.ball-grid-item {
+  display: flex;
+  justify-content: center;
+}
+
+.ball-icon {
+  width: 50rpx; /* 稍微缩小以适应 */
+  height: 50rpx;
+  border-radius: 50%;
+  box-shadow: 2rpx 2rpx 4rpx rgba(0,0,0,0.4);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 复用球的样式逻辑 */
+.ball-icon::after {
+  content: '';
+  position: absolute;
+  top: 6rpx;
+  left: 6rpx;
+  width: 10rpx;
+  height: 6rpx;
+  background: rgba(255,255,255,0.4);
+  border-radius: 50%;
+  transform: rotate(-45deg);
+}
+
+/* 修复球号码居中问题 */
+.ball-inner {
+  width: 22rpx;
+  height: 22rpx;
+  font-size: 14rpx;
+  background: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-weight: bold;
+  line-height: 22rpx; /* 确保垂直居中 */
+  text-align: center; /* 确保水平居中 */
+}
+
+
+/* 竖向球桌容器 */
+.table-container-portrait {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start; /* 顶部对齐 */
+  justify-content: center;
+  padding: 40rpx; 
+  padding-top: 20rpx; /* 减少内部顶部padding */
+  box-sizing: border-box;
+  margin-left: 0; 
+  transition: margin-left 0.3s;
+}
+
+/* 竖向球桌 */
+.pool-table-portrait {
+  width: 680rpx; 
+  height: 1200rpx; 
+  /* 仿实木纹理 */
+  background: #5D4037;
+  background-image: 
+    linear-gradient(90deg, rgba(255,255,255,0.05) 50%, transparent 50%),
+    linear-gradient(90deg, #5D4037, #3e2723);
+  background-size: 4px 100%, 100% 100%;
+  border-radius: 20rpx;
+  position: relative;
+  /* 立体投影与倒角 */
+  box-shadow: 
+    inset 0 2rpx 6rpx rgba(255,255,255,0.3), /* 顶部高光 */
+    inset 0 -4rpx 8rpx rgba(0,0,0,0.5), /* 底部阴影 */
+    0 20rpx 50rpx rgba(0,0,0,0.8); /* 整体悬浮投影 */
+  padding: 30rpx; 
+  box-sizing: border-box;
+}
+
+.table-felt {
+  width: 100%;
+  height: 100%;
+  /* 台呢光照与纹理 */
+  background: radial-gradient(circle at 50% 40%, #0d7e48 0%, #0a6c3f 60%, #064225 100%);
+  position: relative;
+  border-radius: 4rpx;
+  /* 台呢下陷感 */
+  box-shadow: inset 0 0 20rpx rgba(0,0,0,0.6);
+}
+
+/* 竖向袋口 */
+.pocket {
+  position: absolute;
+  width: 44rpx;
+  height: 44rpx;
+  background: #000;
+  border-radius: 50%;
+  z-index: 1;
+  /* 袋口深度修正：去除高光，使用纯黑深邃感 */
+  box-shadow: inset 0 0 10rpx rgba(0,0,0,0.9);
+  /* 微弱边缘，区分洞口与背景 */
+  border: 1rpx solid rgba(255,255,255,0.05);
+}
+
+.p-top-left { top: -16rpx; left: -16rpx; }
+.p-top-right { top: -16rpx; right: -16rpx; }
+
+.p-middle-left { top: 50%; left: -20rpx; transform: translateY(-50%); }
+.p-middle-right { top: 50%; right: -20rpx; transform: translateY(-50%); }
+
+.p-bottom-left { bottom: -16rpx; left: -16rpx; }
+.p-bottom-right { bottom: -16rpx; right: -16rpx; }
+
+/* 竖向开球线 (下方) */
+.head-string-portrait {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 20%;
+  height: 2rpx;
+  background: rgba(255,255,255,0.2);
+}
+
+/* 竖向置球点 (上方) */
+.foot-spot-portrait {
+  position: absolute;
+  left: 50%;
+  top: 25%;
+  width: 8rpx;
+  height: 8rpx;
+  background: rgba(0,0,0,0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Canvas 画线层 */
+.draw-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20; 
+  pointer-events: none; 
+}
+
+.draw-canvas.active {
+  pointer-events: auto; 
+}
+
+/* 球的样式复用 */
+.ball-wrapper {
+  width: 40rpx; 
+  height: 40rpx;
+  z-index: 10;
+}
+
+.ball {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  box-shadow: 2rpx 2rpx 6rpx rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* 颜色定义 */
+.ball-0 { background: #fff; }
+.ball-0 .ball-inner { display: none; }
+.ball-8 { background: #000; }
+.ball-8 .ball-inner { background: #fff; color: #000; }
+
+.ball-1, .ball-9 { background: #FFD700; } 
+.ball-2, .ball-10 { background: #0052D9; } 
+.ball-3, .ball-11 { background: #FF4D4F; } 
+.ball-4, .ball-12 { background: #722ED1; } 
+.ball-5, .ball-13 { background: #FA8C16; } 
+.ball-6, .ball-14 { background: #52C41A; } 
+.ball-7, .ball-15 { background: #A52A2A; } 
+
+.ball-stripe {
+  background: #fff;
+  overflow: hidden;
+}
+
+.ball-stripe.ball-9 { background: linear-gradient(to right, #fff 15%, #FFD700 15%, #FFD700 85%, #fff 85%); }
+.ball-stripe.ball-10 { background: linear-gradient(to right, #fff 15%, #0052D9 15%, #0052D9 85%, #fff 85%); }
+.ball-stripe.ball-11 { background: linear-gradient(to right, #fff 15%, #FF4D4F 15%, #FF4D4F 85%, #fff 85%); }
+.ball-stripe.ball-12 { background: linear-gradient(to right, #fff 15%, #722ED1 15%, #722ED1 85%, #fff 85%); }
+.ball-stripe.ball-13 { background: linear-gradient(to right, #fff 15%, #FA8C16 15%, #FA8C16 85%, #fff 85%); }
+.ball-stripe.ball-14 { background: linear-gradient(to right, #fff 15%, #52C41A 15%, #52C41A 85%, #fff 85%); }
+.ball-stripe.ball-15 { background: linear-gradient(to right, #fff 15%, #A52A2A 15%, #A52A2A 85%, #fff 85%); }

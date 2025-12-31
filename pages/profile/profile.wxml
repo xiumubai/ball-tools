@@ -34,6 +34,16 @@
         </view>
         <t-icon name="chevron-right" size="40rpx" class="menu-arrow" />
       </view>
+      <view class="menu-item" bindtap="goTactic">
+        <view class="menu-icon orange">
+          <t-icon name="edit-1" size="40rpx" />
+        </view>
+        <view class="menu-content">
+          <view class="title">战术画板</view>
+          <view class="desc">复盘局面，模拟走位，提升球技</view>
+        </view>
+        <t-icon name="chevron-right" size="40rpx" class="menu-arrow" />
+      </view>
     </view>
   </view>
 

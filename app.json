@@ -10,7 +10,8 @@
     "pages/training/index",
     "pages/training/session",
     "pages/training/history",
-    "pages/playtime/history"
+    "pages/playtime/history",
+    "pages/tactic/index"
   ],
   "window": {
     "navigationBarTextStyle": "white",

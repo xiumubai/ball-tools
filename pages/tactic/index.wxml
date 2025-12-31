@@ -1,0 +1,146 @@
+<view class="container">
+  <!-- 顶部工具栏 (Undo) -->
+  <view class="top-toolbar">
+    <view class="undo-btn" bindtap="undo">
+      <t-icon name="rollback" size="40rpx" color="#fff" />
+    </view>
+  </view>
+
+  <!-- 左侧工具栏抽屉 -->
+  <view class="sidebar-drawer {{isToolbarExpanded ? 'expanded' : ''}}" bindtap="closeToolbar">
+    <!-- 触发按钮 (收起状态可见) -->
+    <view class="drawer-toggle" catchtap="toggleToolbar" wx:if="{{!isToolbarExpanded}}">
+      <t-icon name="chevron-right" size="48rpx" color="#fff" />
+    </view>
+
+    <!-- 展开内容 -->
+    <view class="drawer-content" catchtap="preventBubble">
+
+      <view class="drawer-body">
+        <view class="tool-section">
+          <view class="section-title">模式</view>
+          <view class="tool-btn {{currentMode === 'move' ? 'active' : ''}}" bindtap="setMode" data-mode="move">
+            <t-icon name="move" size="44rpx" />
+            <text>移动</text>
+          </view>
+          <view class="tool-btn {{currentMode === 'draw' ? 'active' : ''}}" bindtap="setMode" data-mode="draw">
+            <t-icon name="edit-1" size="44rpx" />
+            <text>画线</text>
+          </view>
+          
+          <!-- 画线子选项 -->
+          <view class="sub-options" wx:if="{{currentMode === 'draw'}}">
+            <view class="sub-btn {{drawShape === 'free' ? 'active' : ''}}" bindtap="setDrawShape" data-shape="free">自由</view>
+            <view class="sub-btn {{drawShape === 'line' ? 'active' : ''}}" bindtap="setDrawShape" data-shape="line">直线</view>
+            <view class="sub-btn {{drawShape === 'circle' ? 'active' : ''}}" bindtap="setDrawShape" data-shape="circle">圆形</view>
+          </view>
+        </view>
+
+        <view class="divider"></view>
+
+        <view class="tool-section">
+          <view class="section-title">操作</view>
+          <view class="tool-btn" bindtap="clearLines">
+            <t-icon name="clear" size="44rpx" />
+            <text>清线</text>
+          </view>
+          <view class="tool-btn" bindtap="clearTable">
+            <t-icon name="delete" size="44rpx" />
+            <text>清桌</text>
+          </view>
+        </view>
+
+        <view class="divider"></view>
+
+        <view class="tool-section">
+          <view class="section-title">加球</view>
+          <!-- 选球网格 -->
+          <view class="ball-grid">
+            <view class="ball-grid-item" bindtap="addBall" data-number="0" data-type="solid">
+              <view class="ball-icon ball-0"></view>
+            </view>
+            <view class="ball-grid-item" bindtap="addBall" data-number="8" data-type="solid">
+              <view class="ball-icon ball-8"><view class="ball-inner">8</view></view>
+            </view>
+            <!-- 全色球 1-7 -->
+            <block wx:for="{{[1,2,3,4,5,6,7]}}" wx:key="*this">
+              <view class="ball-grid-item" bindtap="addBall" data-number="{{item}}" data-type="solid">
+                <view class="ball-icon ball-{{item}}"><view class="ball-inner">{{item}}</view></view>
+              </view>
+            </block>
+            <!-- 花色球 9-15 -->
+            <block wx:for="{{[9,10,11,12,13,14,15]}}" wx:key="*this">
+              <view class="ball-grid-item" bindtap="addBall" data-number="{{item}}" data-type="stripe">
+                <view class="ball-icon ball-stripe ball-{{item}}"><view class="ball-inner">{{item}}</view></view>
+              </view>
+            </block>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 球桌区域 (竖向) -->
+  <view class="table-container-portrait">
+    <!-- 外层负责边框和背景 -->
+    <view class="pool-table-portrait" style="width: {{tableWidth}}px; height: {{tableHeight}}px;">
+      
+      <!-- 桌面背景与边框装饰 (移出 movable-area) -->
+      <!-- 台呢背景层，大小限制在台呢内部，偏移 borderWidth -->
+      <view class="table-felt" style="width: {{tableInnerWidth}}px; height: {{tableInnerHeight}}px; position: absolute; left: {{borderWidth}}px; top: {{borderWidth}}px;">
+         <!-- 6个袋口 -->
+         <view class="pocket p-top-left"></view>
+         <view class="pocket p-top-right"></view>
+         <view class="pocket p-middle-left"></view>
+         <view class="pocket p-middle-right"></view>
+         <view class="pocket p-bottom-left"></view>
+         <view class="pocket p-bottom-right"></view>
+         
+         <!-- 开球线 (竖向：下方) -->
+         <view class="head-string-portrait"></view>
+         <!-- 置球点 (竖向：上方) -->
+         <view class="foot-spot-portrait"></view>
+      </view>
+
+      <!-- Canvas 画线层 (覆盖在台呢上，大小与台呢一致) -->
+      <canvas 
+        type="2d" 
+        id="drawCanvas" 
+        class="draw-canvas {{currentMode === 'draw' ? 'active' : ''}}"
+        style="width: {{tableInnerWidth}}px; height: {{tableInnerHeight}}px; left: {{borderWidth}}px; top: {{borderWidth}}px;"
+        disable-scroll="{{true}}"
+        bindtouchstart="onCanvasTouchStart"
+        bindtouchmove="onCanvasTouchMove"
+        bindtouchend="onCanvasTouchEnd"
+      ></canvas>
+
+      <!-- 移动区域 (限制在台呢内) -->
+      <movable-area 
+        class="table-felt-area" 
+        style="width: {{tableInnerWidth}}px; height: {{tableInnerHeight}}px; position: absolute; left: {{borderWidth}}px; top: {{borderWidth}}px;"
+      >
+        <!-- 放置在桌上的球 -->
+        <block wx:for="{{ballsOnTable}}" wx:key="id">
+          <movable-view 
+            x="{{item.x}}" 
+            y="{{item.y}}" 
+            direction="all" 
+            class="ball-wrapper {{currentMode === 'draw' ? 'disabled' : ''}}"
+            bindchange="onBallMove"
+            bindtouchend="onBallTouchEnd"
+            bindtouchstart="onBallTouchStart"
+            bindlongpress="onBallLongPress"
+            data-id="{{item.id}}"
+            disabled="{{currentMode === 'draw'}}"
+          >
+            <view class="ball ball-{{item.type}} ball-{{item.number}}">
+              <view class="ball-inner">
+                <text wx:if="{{item.number > 0}}">{{item.number}}</text>
+              </view>
+            </view>
+          </movable-view>
+        </block>
+      </movable-area>
+    </view>
+  </view>
+</view>
