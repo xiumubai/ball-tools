@@ -25,7 +25,6 @@ page {
   --accent-green: #10b981;
   --accent-green-start: #1CC88A;
   --accent-green-end: #5CE1B9;
-  --accent-green-end: #5CE1B9;
   --accent-amber: #f59e0b;
   --accent-red: #ef4444;
   --accent-purple: #8b5cf6;
