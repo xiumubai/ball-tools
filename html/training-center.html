@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>训练中心</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: #1a2332;
+      --bg-input: #0d1320;
+      --border-color: #2a3a50;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-blue: #3b82f6;
+      --accent-blue-hover: #2563eb;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, #0f172a 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 24px 16px;
+      padding-bottom: 100px;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 28px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .back-btn:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-left: 48px;
+    }
+
+    /* Section */
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-header i {
+      color: var(--accent-blue);
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Add Form */
+    .add-form {
+      display: flex;
+      gap: 12px;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      position: relative;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .input-wrapper input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .add-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-hover) 100%);
+      border: none;
+      border-radius: var(--radius-md);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Training List */
+    .training-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .training-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      transition: all 0.2s;
+    }
+
+    .training-item:hover {
+      border-color: var(--accent-blue);
+      transform: translateX(4px);
+    }
+
+    .training-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .training-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+      border-radius: var(--radius-sm);
+      color: var(--accent-blue);
+    }
+
+    .training-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .training-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .training-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .enter-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--accent-blue);
+      border-radius: var(--radius-sm);
+      color: var(--accent-blue);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .enter-btn:hover {
+      background: var(--accent-blue);
+      color: white;
+    }
+
+    .more-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .more-btn:hover {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-item {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+    }
+
+    .stat-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+    }
+
+    .stat-icon.blue {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent-blue);
+    }
+
+    .stat-icon.green {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+    }
+
+    .stat-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Bottom Action */
+    .bottom-action {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px;
+      background: linear-gradient(to top, var(--bg-primary) 60%, transparent);
+    }
+
+    .bottom-action-inner {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .record-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .record-btn:hover {
+      background: var(--bg-secondary);
+      border-color: var(--accent-blue);
+    }
+
+    .record-btn i {
+      color: var(--accent-blue);
+    }
+
+    /* Empty State */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state i {
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-top">
+        <button class="back-btn">
+          <i data-lucide="chevron-left" style="width: 20px; height: 20px;"></i>
+        </button>
+        <h1>训练中心</h1>
+      </div>
+      <p>管理与选择训练模式</p>
+    </header>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-icon blue">
+          <i data-lucide="layers" style="width: 18px; height: 18px;"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">7</span>
+          <span class="stat-label">训练模式</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon green">
+          <i data-lucide="flame" style="width: 18px; height: 18px;"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">12</span>
+          <span class="stat-label">累计训练</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Training Mode -->
+    <section class="section">
+      <div class="section-header">
+        <i data-lucide="plus-circle" style="width: 18px; height: 18px;"></i>
+        <span class="section-title">新增训练模式</span>
+      </div>
+      <div class="add-form">
+        <div class="input-wrapper">
+          <input type="text" placeholder="输入训练模式名称">
+        </div>
+        <button class="add-btn">
+          <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+          添加
+        </button>
+      </div>
+    </section>
+
+    <!-- Training List -->
+    <section class="section">
+      <div class="section-header">
+        <i data-lucide="grid-3x3" style="width: 18px; height: 18px;"></i>
+        <span class="section-title">训练模式列表</span>
+      </div>
+      <div class="training-list">
+        <div class="training-item">
+          <div class="training-info">
+            <div class="training-icon">
+              <i data-lucide="target" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="training-name">五分点</div>
+              <div class="training-meta">已训练 5 次</div>
+            </div>
+          </div>
+          <div class="training-actions">
+            <button class="enter-btn">
+              <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+              进入训练
+            </button>
+            <button class="more-btn">
+              <i data-lucide="more-vertical" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="training-item">
+          <div class="training-info">
+            <div class="training-icon">
+              <i data-lucide="target" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="training-name">长台低杆</div>
+              <div class="training-meta">已训练 3 次</div>
+            </div>
+          </div>
+          <div class="training-actions">
+            <button class="enter-btn">
+              <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+              进入训练
+            </button>
+            <button class="more-btn">
+              <i data-lucide="more-vertical" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="training-item">
+          <div class="training-info">
+            <div class="training-icon">
+              <i data-lucide="target" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="training-name">六分点</div>
+              <div class="training-meta">已训练 2 次</div>
+            </div>
+          </div>
+          <div class="training-actions">
+            <button class="enter-btn">
+              <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+              进入训练
+            </button>
+            <button class="more-btn">
+              <i data-lucide="more-vertical" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="training-item">
+          <div class="training-info">
+            <div class="training-icon">
+              <i data-lucide="target" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="training-name">七分点</div>
+              <div class="training-meta">已训练 1 次</div>
+            </div>
+          </div>
+          <div class="training-actions">
+            <button class="enter-btn">
+              <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+              进入训练
+            </button>
+            <button class="more-btn">
+              <i data-lucide="more-vertical" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="training-item">
+          <div class="training-info">
+            <div class="training-icon">
+              <i data-lucide="target" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="training-name">八分点</div>
+              <div class="training-meta">已训练 1 次</div>
+            </div>
+          </div>
+          <div class="training-actions">
+            <button class="enter-btn">
+              <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+              进入训练
+            </button>
+            <button class="more-btn">
+              <i data-lucide="more-vertical" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="training-item">
+          <div class="training-info">
+            <div class="training-icon">
+              <i data-lucide="target" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="training-name">九分点</div>
+              <div class="training-meta">尚未训练</div>
+            </div>
+          </div>
+          <div class="training-actions">
+            <button class="enter-btn">
+              <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+              进入训练
+            </button>
+            <button class="more-btn">
+              <i data-lucide="more-vertical" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Bottom Action -->
+  <div class="bottom-action">
+    <div class="bottom-action-inner">
+      <button class="record-btn">
+        <i data-lucide="history" style="width: 18px; height: 18px;"></i>
+        训练记录
+      </button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

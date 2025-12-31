@@ -1,47 +1,113 @@
-<view class="safe-page">
+<view class="container cn-padding">
+  <!-- Header -->
   <view class="header">
-    <view class="title">设置与关于</view>
-    <text class="subtitle">管理您的本地数据和应用偏好设置</text>
+    <text class="h1">设置</text>
+    <text class="p">管理您的数据和应用偏好</text>
   </view>
 
-  <view class="card">
-    <view class="card-title">
-      <t-icon name="data-base" size="36rpx" class="icon-db"></t-icon>
-      <text class="card-title-text">数据管理</text>
+  <!-- 功能入口 Section -->
+  <view class="section">
+    <view class="section-title">
+      <t-icon name="app" size="28rpx" class="icon" />
+      <text>功能</text>
+    </view>
+    <view class="card">
+      <view class="menu-item" bindtap="goPlaytimeHistory">
+        <view class="menu-icon blue">
+          <t-icon name="time" size="40rpx" />
+        </view>
+        <view class="menu-content">
+          <view class="title">打球时长记录</view>
+          <view class="desc">查看历史训练时间和次数</view>
+        </view>
+        <text class="menu-value">{{totalPlayText}}</text>
+        <t-icon name="chevron-right" size="40rpx" class="menu-arrow" />
+      </view>
       
-    </view>
-    <view class="notice-content">
-      <text class="notice-title">本地存储说明</text>
-      <text class="notice-desc">本应用采用离线模式，所有比赛记录、统计数据和设置均保存在您的设备本地存储中。注意：清除浏览器或设备缓存将导致所有数据永久丢失。</text>
-    </view>
-    
-  </view>
-  <t-button block size="large" icon="delete-1" theme="danger" class="danger-btn" bindtap="onClearAll">
-    清除所有数据
-  </t-button>
-  <view class="card">
-    <view class="card-title">
-      <t-icon name="help-circle" size="36rpx" class="icon-info"></t-icon>
-      <text class="card-title-text">关于应用</text>
-    </view>
-    <view class="about-row">
-      <text class="about-key">当前版本</text>
-      <text class="about-val">{{version}}</text>
-    </view>
-    <view class="about-row">
-      <text class="about-key">开发者</text>
-      <text class="about-val">{{author}}</text>
-    </view>
-    <view class="about-row" bindtap="onCopyRepo">
-      <text class="about-key">介绍</text>
-      <view class="about-link">
-        <text class="about-val">{{desc}}</text>
+      <view class="menu-item" bindtap="goTraining">
+        <view class="menu-icon green">
+          <t-icon name="flag-2" size="40rpx" />
+        </view>
+        <view class="menu-content">
+          <view class="title">去训练</view>
+          <view class="desc">开始新的训练课程</view>
+        </view>
+        <t-icon name="chevron-right" size="40rpx" class="menu-arrow" />
       </view>
     </view>
   </view>
 
+  <!-- 数据管理 Section -->
+  <view class="section">
+    <view class="section-title">
+      <t-icon name="data-base" size="28rpx" class="icon" />
+      <text>数据管理</text>
+    </view>
+    <view class="card">
+      <view class="warning-box">
+        <t-icon name="error-circle" size="36rpx" class="icon" />
+        <text class="p">本应用采用离线模式，数据保存在本地存储中。清除浏览器缓存将导致数据丢失。</text>
+      </view>
+      
+      <view class="menu-item" bindtap="handleDev">
+        <view class="menu-icon amber">
+          <t-icon name="download" size="40rpx" />
+        </view>
+        <view class="menu-content">
+          <view class="title">导出数据</view>
+          <view class="desc">备份您的训练记录</view>
+        </view>
+        <t-icon name="chevron-right" size="40rpx" class="menu-arrow" />
+      </view>
+      
+      <view class="menu-item" bindtap="handleDev">
+        <view class="menu-icon blue">
+          <t-icon name="upload" size="40rpx" />
+        </view>
+        <view class="menu-content">
+          <view class="title">导入数据</view>
+          <view class="desc">从备份文件恢复</view>
+        </view>
+        <t-icon name="chevron-right" size="40rpx" class="menu-arrow" />
+      </view>
+      
+      <view class="danger-item">
+        <view class="danger-info">
+          <t-icon name="delete" size="40rpx" class="icon" />
+          <view class="text">
+            <view class="title">清除所有数据</view>
+            <view class="desc">此操作不可恢复</view>
+          </view>
+        </view>
+        <button class="btn-danger" bindtap="onClearAll">清除</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 关于 Section -->
+  <view class="section">
+    <view class="section-title">
+      <t-icon name="info-circle" size="28rpx" class="icon" />
+      <text>关于</text>
+    </view>
+    <view class="card">
+      <view class="info-item">
+        <text class="label">当前版本</text>
+        <text class="tag green">{{version}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">开发者</text>
+        <text class="value">{{author}}</text>
+      </view>
+      <view class="info-item" bindtap="onCopyRepo">
+        <text class="label">简介</text>
+        <text class="value">{{desc}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Footer -->
   <view class="footer">
-    <text class="copyright">© 2025 追分记. 未经许可不得复制、改编、分发等.</text>
-    <text class="slogan">为台球爱好者打造</text>
+    <text>Made with ♥ for billiard lovers</text>
   </view>
 </view>

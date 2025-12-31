@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>训练会话 - 五分点</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: #1a2332;
+      --border-color: #2a3444;
+      --text-primary: #ffffff;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-amber: #f59e0b;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .back-btn:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .header-info {
+      flex: 1;
+    }
+
+    .header-info h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .header-info p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .session-badge {
+      padding: 6px 12px;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .session-badge .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent-blue);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Timer Section */
+    .timer-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timer-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+    }
+
+    .timer-display {
+      font-size: 56px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .timer-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 32px;
+      background: var(--accent-blue);
+      border: none;
+      border-radius: var(--radius-full);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .timer-btn:hover {
+      background: #2563eb;
+      transform: scale(1.02);
+    }
+
+    .timer-btn.running {
+      background: var(--accent-amber);
+    }
+
+    .timer-btn.running:hover {
+      background: #d97706;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px 16px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .stat-card.hits::before {
+      background: var(--accent-green);
+    }
+
+    .stat-card.misses::before {
+      background: var(--accent-red);
+    }
+
+    .stat-card.rate::before {
+      background: var(--accent-amber);
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+
+    .stat-card.hits .stat-icon {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+    }
+
+    .stat-card.misses .stat-icon {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+    }
+
+    .stat-card.rate .stat-icon {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-card.hits .stat-value {
+      color: var(--accent-green);
+    }
+
+    .stat-card.misses .stat-value {
+      color: var(--accent-red);
+    }
+
+    .stat-card.rate .stat-value {
+      color: var(--accent-amber);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+      pointer-events: none;
+    }
+
+    .action-btn.hit {
+      background: var(--accent-green);
+      color: white;
+    }
+
+    .action-btn.hit:hover {
+      background: #059669;
+      transform: scale(1.02);
+    }
+
+    .action-btn.hit:active {
+      transform: scale(0.98);
+    }
+
+    .action-btn.miss {
+      background: var(--accent-red);
+      color: white;
+    }
+
+    .action-btn.miss:hover {
+      background: #dc2626;
+      transform: scale(1.02);
+    }
+
+    .action-btn.miss:active {
+      transform: scale(0.98);
+    }
+
+    /* Control Buttons */
+    .control-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .control-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .control-btn.reset {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .control-btn.reset:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border-color: var(--text-muted);
+    }
+
+    .control-btn.finish {
+      background: var(--accent-blue);
+      border: none;
+      color: white;
+    }
+
+    .control-btn.finish:hover {
+      background: #2563eb;
+    }
+
+    /* History Preview */
+    .history-preview {
+      margin-top: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .history-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .history-title i {
+      width: 16px;
+      height: 16px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .history-item {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .history-item.hit {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .history-item.miss {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .empty-history {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      padding: 12px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <button class="back-btn">
+      <i data-lucide="arrow-left"></i>
+    </button>
+    <div class="header-info">
+      <h1>五分点</h1>
+      <p>训练会话</p>
+    </div>
+    <div class="session-badge">
+      <span class="dot"></span>
+      进行中
+    </div>
+  </header>
+
+  <!-- Timer Section -->
+  <section class="timer-section">
+    <div class="timer-display">00:00:00</div>
+    <button class="timer-btn">
+      <i data-lucide="play"></i>
+      开始计时
+    </button>
+  </section>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card hits">
+      <div class="stat-icon">
+        <i data-lucide="check-circle"></i>
+      </div>
+      <div class="stat-label">命中</div>
+      <div class="stat-value">0</div>
+    </div>
+    <div class="stat-card misses">
+      <div class="stat-icon">
+        <i data-lucide="x-circle"></i>
+      </div>
+      <div class="stat-label">丢球</div>
+      <div class="stat-value">0</div>
+    </div>
+    <div class="stat-card rate">
+      <div class="stat-icon">
+        <i data-lucide="percent"></i>
+      </div>
+      <div class="stat-label">命中率</div>
+      <div class="stat-value">0%</div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button class="action-btn hit">
+      <i data-lucide="plus-circle"></i>
+      命中 +1
+    </button>
+    <button class="action-btn miss">
+      <i data-lucide="minus-circle"></i>
+      丢球 +1
+    </button>
+  </div>
+
+  <!-- Control Buttons -->
+  <div class="control-buttons">
+    <button class="control-btn reset">
+      <i data-lucide="rotate-ccw"></i>
+      重置
+    </button>
+    <button class="control-btn finish">
+      <i data-lucide="flag"></i>
+      结束训练
+    </button>
+  </div>
+
+  <!-- History Preview -->
+  <section class="history-preview">
+    <div class="history-header">
+      <div class="history-title">
+        <i data-lucide="history"></i>
+        本次记录
+      </div>
+    </div>
+    <div class="history-list">
+      <div class="empty-history">开始训练后，记录将显示在这里</div>
+    </div>
+  </section>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

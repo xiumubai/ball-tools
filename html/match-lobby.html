@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>比赛大厅</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: #1a2332;
+      --bg-input: #0d1320;
+      --border-color: #2a3a50;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-blue: #3b82f6;
+      --accent-blue-hover: #2563eb;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-red: #ef4444;
+      --accent-orange: #f59e0b;
+      --accent-yellow: #eab308;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, #0f172a 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 24px 16px;
+      padding-bottom: 40px;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--accent-green);
+      transform: translateY(-2px);
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .icon-box {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-box.green {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent-green);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .arrow-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+    }
+
+    .card:hover .arrow-btn {
+      background: var(--accent-green);
+      color: white;
+    }
+
+    /* Grid Layout for small cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .small-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .small-card:hover {
+      border-color: var(--accent-orange);
+      transform: translateY(-2px);
+    }
+
+    .small-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .small-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .small-card-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .highlight-circle {
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .highlight-circle.green {
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+    }
+
+    .icon-box.orange {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--accent-orange);
+    }
+
+    /* Section Label */
+    .section-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-secondary);
+    }
+
+    /* Empty State */
+    .empty-state {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>比赛大厅</h1>
+      <p>选择比赛模式，或继续进行中的比赛</p>
+    </header>
+
+    <!-- 8 Ball Card -->
+    <div class="card">
+      <div class="card-content">
+        <div class="card-header">
+          <div class="icon-box green">
+            <i data-lucide="target" style="width: 16px; height: 16px;"></i>
+          </div>
+          <span class="card-title">中式黑八</span>
+        </div>
+        <p class="card-desc">标准8球规则，支持炸清/接清统计</p>
+      </div>
+      <div class="arrow-btn">
+        <i data-lucide="chevron-right" style="width: 20px; height: 20px;"></i>
+      </div>
+      <div class="highlight-circle green"></div>
+    </div>
+
+    <!-- 9 Ball Grid -->
+    <div class="grid-2">
+      <!-- 2 Players -->
+      <div class="small-card">
+        <div class="small-card-header">
+          <div class="icon-box orange">
+            <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+          </div>
+          <span class="small-card-title">9球两人追分</span>
+        </div>
+        <p class="small-card-desc">2人对战模式</p>
+        <div class="highlight-circle"></div>
+      </div>
+
+      <!-- 3 Players -->
+      <div class="small-card">
+        <div class="small-card-header">
+          <div class="icon-box orange">
+            <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+          </div>
+          <span class="small-card-title">9球三人追分</span>
+        </div>
+        <p class="small-card-desc">3人混战模式</p>
+        <div class="highlight-circle"></div>
+      </div>
+    </div>
+
+    <!-- Ongoing Section -->
+    <div class="section-label">
+      <span class="dot"></span>
+      正在进行 (0)
+    </div>
+
+    <div class="empty-state">
+      <i data-lucide="clipboard-list" style="width: 18px; height: 18px;"></i>
+      暂无进行中的比赛
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

@@ -1,75 +1,91 @@
-<view class="safe-page">
+<view class="container cn-padding">
+  <!-- Header -->
   <view class="header">
-    <view class="title">比赛大厅</view>
-    <text class="subtitle">选择比赛模式，或继续进行中的比赛</text>
+    <view class="h1">比赛大厅</view>
+    <view class="p">选择比赛模式，或继续进行中的比赛</view>
   </view>
 
-  <view class="new-section">
-    <view class="mode-card large" bindtap="startEightBall" hover-class="hover-emerald">
-      <view class="iconbox accent-emerald">
-        <t-icon name="component-radio" size="32rpx"></t-icon>
+  <!-- 8 Ball Card -->
+  <view class="card" bindtap="startEightBall">
+    <view class="card-content">
+      <view class="card-header">
+        <view class="icon-box green">
+          <t-icon name="chart-ring-1" size="32rpx" />
+        </view>
+        <text class="card-title">中式黑八</text>
       </view>
-      <view class="content">
-        <text class="title">中式黑八</text>
-        <text class="desc">标准8球规则，支持炸清/接清统计</text>
-      </view>
-      <t-icon name="chevron-right" size="32rpx" class="arrow"></t-icon>
-      <view class="corner-emerald"></view>
+      <text class="card-desc">标准8球规则，支持炸清/接清统计</text>
     </view>
-    <view class="new-grid">
-      <view class="mode-card small" bindtap="startNineBall" hover-class="hover-amber">
-        <view class="corner-amber"></view>
-        <view class="iconbox-sm accent-amber">
-          <t-icon name="member" size="32rpx"></t-icon>
+    <view class="arrow-btn">
+      <t-icon name="chevron-right" size="40rpx" />
+    </view>
+    <view class="highlight-circle green"></view>
+  </view>
+
+  <!-- 9 Ball Grid -->
+  <view class="grid-2">
+    <!-- 2 Players -->
+    <view class="small-card" bindtap="startNineBall">
+      <view class="small-card-header">
+        <view class="icon-box orange">
+          <t-icon name="usergroup" size="28rpx" />
         </view>
-        <text class="title-small">9球两人追分</text>
-        <text class="desc-small">2人对战模式</text>
+        <text class="small-card-title">9球两人追分</text>
       </view>
-      <view class="mode-card small" bindtap="startNineBallThree" hover-class="hover-orange">
-        <view class="corner-orange"></view>
-        <view class="iconbox-sm accent-orange">
-          <t-icon name="usergroup" size="32rpx"></t-icon>
+      <text class="small-card-desc">2人对战模式</text>
+      <view class="highlight-circle"></view>
+    </view>
+
+    <!-- 3 Players -->
+    <view class="small-card" bindtap="startNineBallThree">
+      <view class="small-card-header">
+        <view class="icon-box orange">
+          <t-icon name="usergroup" size="28rpx" />
         </view>
-        <text class="title-small">9球三人追分</text>
-        <text class="desc-small">3人混战模式</text>
+        <text class="small-card-title">9球三人追分</text>
       </view>
+      <text class="small-card-desc">3人混战模式</text>
+      <view class="highlight-circle"></view>
     </view>
   </view>
 
-  <view class="section-header">
-    <view class="dot {{ongoingMatches.length ? 'run' : 'idle'}}"></view>
-    <text class="section-title">正在进行（{{ongoingMatches.length}}）</text>
+  <!-- Ongoing Section -->
+  <view class="section-label">
+    <view class="dot"></view>
+    <text>正在进行 ({{ongoingMatches.length}})</text>
   </view>
-  <view class="ongo-list">
-    <block wx:if="{{ongoingMatches.length}}">
+
+  <block wx:if="{{ongoingMatches.length}}">
+    <view class="ongo-list">
       <block wx:for="{{ongoingMatches}}" wx:key="id">
-        <view class="ongo-card">
-          <t-icon name="play-circle" size="120rpx" class="bg-icon"></t-icon>
-          <view class="ongo-top">
-            <t-tag size="small" shape="round" style="{{item.mode === '中式黑八' ? 'border:none;background:#fe9a0033;color:#f5c73d' : 'border:none;background:#00bc7d33;color:#2eb873'}}">{{item.mode}}</t-tag>
-            <t-tag size="small" style="color: #a6a6a6; background: #2e3538; border: none;" shape="round">{{item.playersCount}}人模式</t-tag>
-          </view>
-          <view class="ongo-time">
-            <t-icon name="time" size="28rpx" class="time-icon"></t-icon>
-            <text class="time-text">开始于 {{item.startTime}}</text>
-          </view>
-          <view class="ongo-actions">
-            <view class="btn-continue" bindtap="continueMatch" data-id="{{item.id}}">
-              <text style="font-size: 26rpx;">继续比赛</text>
+        <view class="card">
+          <view class="card-content">
+            <view class="card-header">
+              <view class="icon-box {{item.mode === '中式黑八' ? 'green' : 'orange'}}">
+                <t-icon name="{{item.mode === '中式黑八' ? 'chart-ring-1' : 'usergroup'}}" size="32rpx" />
+              </view>
+              <text class="card-title">{{item.mode}}</text>
+              <t-tag size="small" variant="light" theme="{{item.mode === '中式黑八' ? 'success' : 'warning'}}" style="margin-left: 12rpx;">{{item.playersCount}}人</t-tag>
             </view>
-            <view class="btn-del" bindtap="deleteMatch" data-id="{{item.id}}" hover-class="hover-del">
-              <t-icon name="delete" size="32rpx"></t-icon>
-            </view>
+            <view class="card-desc">开始于 {{item.startTime}}</view>
           </view>
           
+          <view class="ongo-actions">
+            <view class="btn-continue" catchtap="continueMatch" data-id="{{item.id}}">
+              <text>继续</text>
+            </view>
+            <view class="btn-del" catchtap="deleteMatch" data-id="{{item.id}}">
+              <t-icon name="delete" size="32rpx" />
+            </view>
+          </view>
         </view>
       </block>
-    </block>
-    <block wx:else>
-      <view class="empty">
-        <t-icon name="task-location" size="40rpx" class="empty-icon"></t-icon>
-        <text class="empty-text">暂无进行中的比赛</text>
-      </view>
-    </block>
-  </view>
+    </view>
+  </block>
+  <block wx:else>
+    <view class="empty-state">
+      <t-icon name="assignment" size="36rpx" color="#64748b" />
+      <text>暂无进行中的比赛</text>
+    </view>
+  </block>
 </view>

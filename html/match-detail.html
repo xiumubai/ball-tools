@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>比赛详情</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: #1a2332;
+      --bg-input: #0d1320;
+      --border-color: #2a3a50;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-blue: #3b82f6;
+      --accent-blue-hover: #2563eb;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-red: #ef4444;
+      --accent-orange: #f59e0b;
+      --accent-yellow: #eab308;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, #0f172a 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* Main Card */
+    .main-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    /* Header */
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .type-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 12px;
+      background: white;
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+    }
+
+    .timestamp {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Players Row */
+    .players-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .player-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .avatar-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-muted);
+      position: relative;
+    }
+
+    .avatar-circle.active {
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+    }
+
+    .avatar-circle.active span {
+      color: var(--accent-green);
+    }
+
+    .player-label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .player-label.active {
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    .player-score {
+      font-size: 28px;
+      font-weight: 800;
+      color: white;
+      line-height: 1;
+    }
+
+    .player-score.active {
+      color: var(--accent-green);
+    }
+
+    /* Total Rounds */
+    .total-rounds {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .action-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .action-btn.primary {
+      background: var(--accent-green);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .action-btn.secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    /* Stats Table */
+    .stats-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .stats-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .stats-table th {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      padding-bottom: 12px;
+    }
+
+    .stats-table th:first-child {
+      text-align: left;
+    }
+
+    .stats-table td {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-primary);
+      padding: 8px 0;
+    }
+
+    .stats-table td:first-child {
+      text-align: left;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Main Card -->
+    <div class="main-card">
+      <div class="card-header">
+        <div class="type-pill">9球</div>
+        <div class="timestamp">2025-12-31 11:57</div>
+      </div>
+
+      <div class="players-row">
+        <!-- Player A -->
+        <div class="player-item">
+          <div class="avatar-circle active">
+            <span>玩</span>
+          </div>
+          <div class="player-label active">玩家A</div>
+          <div class="player-score active">111</div>
+        </div>
+
+        <!-- Player B -->
+        <div class="player-item">
+          <div class="avatar-circle">
+            <span>玩</span>
+          </div>
+          <div class="player-label">玩家B</div>
+          <div class="player-score">89</div>
+        </div>
+
+        <!-- Player C -->
+        <div class="player-item">
+          <div class="avatar-circle">
+            <span>玩</span>
+          </div>
+          <div class="player-label">玩家C</div>
+          <div class="player-score">100</div>
+        </div>
+      </div>
+
+      <div class="total-rounds">3 总局数</div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="action-btn primary">数据统计</button>
+      <button class="action-btn secondary">生成卡片</button>
+    </div>
+
+    <!-- Stats Table -->
+    <div class="stats-card">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>统计项</th>
+            <th>玩家A</th>
+            <th>玩家B</th>
+            <th>玩家C</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>普胜</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>小金</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>大金</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>黄金9</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>犯规</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

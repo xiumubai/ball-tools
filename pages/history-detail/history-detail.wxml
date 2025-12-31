@@ -1,7 +1,7 @@
-<view class="safe-page">
+<view class="container">
   <view class="card bg-card border-border glass">
     <view class="card-header">
-      <t-tag size="small" shape="round" variant="light" theme="{{type=='8球'?'success':'warning'}}">{{type}}</t-tag>
+      <view class="badge {{type=='8球'?'green':'orange'}}">{{type}}</view>
       <text class="time text-muted-foreground">{{date}} {{time}}</text>
     </view>
     <view class="players {{players.length==3?'three':'two'}}">

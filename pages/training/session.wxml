@@ -1,0 +1,73 @@
+<view class="container cn-padding">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-info">
+      <view class="title">{{modeName}}</view>
+      <text class="subtitle">训练会话</text>
+    </view>
+    <view class="session-badge">
+      <view class="dot"></view>
+      <text>{{hasStarted ? '进行中' : '未开始'}}</text>
+    </view>
+  </view>
+
+  <!-- Timer Section -->
+  <view class="timer-section">
+    <view class="timer-display">{{timerText}}</view>
+    <button class="timer-btn {{isRunning ? 'running' : ''}}" bindtap="toggleTimer">
+      <t-icon name="{{isRunning ? 'pause-circle' : 'play-circle'}}" size="36rpx" />
+      <text>{{isRunning ? '暂停计时' : '开始计时'}}</text>
+    </button>
+  </view>
+
+  <!-- Stats Grid -->
+  <view class="stats-grid">
+    <view class="stat-card hits">
+      <view class="stat-icon">
+        <t-icon name="check-circle" size="40rpx" />
+      </view>
+      <text class="stat-label">命中</text>
+      <text class="stat-value">{{hits}}</text>
+    </view>
+    <view class="stat-card misses">
+      <view class="stat-icon">
+        <t-icon name="close-circle" size="40rpx" />
+      </view>
+      <text class="stat-label">丢球</text>
+      <text class="stat-value">{{misses}}</text>
+    </view>
+    <view class="stat-card rate">
+      <view class="stat-icon">
+        <t-icon name="chart" size="40rpx" />
+      </view>
+      <text class="stat-label">命中率</text>
+      <text class="stat-value">{{accuracyText}}</text>
+    </view>
+  </view>
+
+  <!-- Action Buttons -->
+  <view class="action-buttons">
+    <view class="action-btn hit" bindtap="addHit" disabled="{{!hasStarted}}">
+      <t-icon name="add-circle" size="44rpx" />
+      <text>命中 +1</text>
+    </view>
+    <view class="action-btn miss" bindtap="addMiss" disabled="{{!hasStarted}}">
+      <t-icon name="minus-circle" size="44rpx" />
+      <text>丢球 +1</text>
+    </view>
+  </view>
+
+  <!-- Control Buttons -->
+  <view class="control-buttons">
+    <view class="control-btn reset" bindtap="restart">
+      <t-icon name="refresh" size="36rpx" />
+      <text>重置</text>
+    </view>
+    <view class="control-btn finish" bindtap="endSession">
+      <t-icon name="flag" size="36rpx" />
+      <text>结束训练</text>
+    </view>
+  </view>
+
+
+</view>

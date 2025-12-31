@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>训练记录</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: #1a2332;
+      --bg-input: #0d1320;
+      --border-color: #2a3a50;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-blue: #3b82f6;
+      --accent-blue-hover: #2563eb;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, #0f172a 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 24px 16px;
+      padding-bottom: 40px;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 24px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .back-btn:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-left: 48px;
+    }
+
+    /* Mode Selection (Scrollable) */
+    .mode-scroll {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 24px;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+    }
+
+    .mode-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .mode-chip {
+      flex: 0 0 auto;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mode-chip.active {
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-hover) 100%);
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .mode-chip:hover:not(.active) {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .kpi-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* Section Styles */
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-header i {
+      color: var(--text-secondary);
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* List Styles */
+    .list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .list-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+
+    .item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .badge i {
+      color: var(--accent-blue);
+    }
+
+    .item-stats {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .stat-text {
+      color: var(--text-secondary);
+    }
+
+    .stat-highlight {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    
+    .hit-rate {
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    /* Training Log Specific */
+    .log-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .log-time {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .log-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin-bottom: 12px;
+    }
+
+    .log-details {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .log-details span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .log-details .highlight {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-top">
+        <button class="back-btn">
+          <i data-lucide="chevron-left" style="width: 20px; height: 20px;"></i>
+        </button>
+        <h1>训练记录</h1>
+      </div>
+      <p>查看训练历史与汇总</p>
+    </header>
+
+    <!-- Mode Selection -->
+    <div class="mode-scroll">
+      <div class="mode-chip active">五分点</div>
+      <div class="mode-chip">长台低杆</div>
+      <div class="mode-chip">五分点</div>
+      <div class="mode-chip">六分点</div>
+      <div class="mode-chip">七分点</div>
+      <div class="mode-chip">八分点</div>
+      <div class="mode-chip">九分点</div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-value">2</div>
+        <div class="kpi-label">总次数</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">00:00:32</div>
+        <div class="kpi-label">总时长</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">65</div>
+        <div class="kpi-label">总进球</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">14</div>
+        <div class="kpi-label">总丢球</div>
+      </div>
+    </div>
+
+    <!-- Mode Summary -->
+    <section class="section">
+      <div class="section-header">
+        <i data-lucide="target" style="width: 18px; height: 18px;"></i>
+        <span class="section-title">模式汇总</span>
+      </div>
+      <div class="list-container">
+        <div class="list-item">
+          <div class="item-header">
+            <span class="badge">
+              <i data-lucide="medal" style="width: 14px; height: 14px;"></i>
+              五分点
+            </span>
+          </div>
+          <div class="item-stats">
+            <div class="stat-text">次数 2 &nbsp; 时长 00:00:32 &nbsp; 进 65 / 失 14</div>
+            <div class="hit-rate">命中率 82%</div>
+          </div>
+        </div>
+
+        <div class="list-item">
+          <div class="item-header">
+            <span class="badge">
+              <i data-lucide="crosshair" style="width: 14px; height: 14px;"></i>
+              长台低杆
+            </span>
+          </div>
+          <div class="item-stats">
+            <div class="stat-text">次数 1 &nbsp; 时长 00:00:05 &nbsp; 进 14 / 失 1</div>
+            <div class="hit-rate">命中率 93%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Training Details -->
+    <div class="list-container">
+      <div class="log-item">
+        <div class="log-header">
+          <span class="badge">
+            <i data-lucide="circle-dot" style="width: 14px; height: 14px;"></i>
+            五分点
+          </span>
+          <span class="log-time">2025-12-30 16:26</span>
+        </div>
+        <div class="log-divider"></div>
+        <div class="log-details">
+          <span>时长 <span class="highlight">00:00:07</span></span>
+          <span>进 <span class="highlight">11</span></span>
+          <span>失 <span class="highlight">2</span></span>
+          <span style="margin-left: auto;" class="hit-rate">命中率 85%</span>
+        </div>
+      </div>
+
+      <div class="log-item">
+        <div class="log-header">
+          <span class="badge">
+            <i data-lucide="circle-dot" style="width: 14px; height: 14px;"></i>
+            五分点
+          </span>
+          <span class="log-time">2025-12-30 16:23</span>
+        </div>
+        <div class="log-divider"></div>
+        <div class="log-details">
+          <span>时长 <span class="highlight">00:00:25</span></span>
+          <span>进 <span class="highlight">54</span></span>
+          <span>失 <span class="highlight">12</span></span>
+          <span style="margin-left: auto;" class="hit-rate">命中率 82%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

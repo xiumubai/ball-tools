@@ -1,9 +1,11 @@
 // pages/profile.js
+const storage = require('../../utils/storage')
 Page({
   data: {
     version: 'v1.0.0',
     author: '朽木白',
     desc: '由一个台球爱好者开发',
+    totalPlayText: '00:00:00'
   },
 
   /**
@@ -27,6 +29,20 @@ Page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setSelected(3)
     }
+    this.refreshPlayTotal()
+  },
+  refreshPlayTotal() {
+    const sec = storage.play.getTotalSeconds()
+    const h = String(Math.floor(sec / 3600)).padStart(2, '0')
+    const m = String(Math.floor((sec % 3600) / 60)).padStart(2, '0')
+    const s = String(sec % 60).padStart(2, '0')
+    this.setData({ totalPlayText: `${h}:${m}:${s}` })
+  },
+  handleDev() {
+    wx.showToast({
+      title: '正在开发中',
+      icon: 'none'
+    })
   },
   onClearAll() {
     wx.showModal({
@@ -38,9 +54,16 @@ Page({
         if (res.confirm) {
           try { wx.clearStorageSync() } catch(e) {}
           wx.showToast({ title: '已清除', icon: 'none' })
+          this.refreshPlayTotal()
         }
       }
     })
+  },
+  goPlaytimeHistory() {
+    wx.navigateTo({ url: '/pages/playtime/history' })
+  },
+  goTraining() {
+    wx.navigateTo({ url: '/pages/training/index' })
   },
   onCopyRepo() {
     wx.setClipboardData({ data: this.data.repoUrl, success: () => { wx.showToast({ title: '链接已复制', icon: 'none' }) } })

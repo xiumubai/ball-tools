@@ -1,63 +1,90 @@
-<view class="safe-page">
+<view class="container cn-padding">
+  <!-- Header -->
   <view class="header">
-    <view class="title">台球计分器</view>
-    <text class="subtitle">专业的台球比赛记分工具，随时随地记录精彩瞬间</text>
+    <view class="h1">台球计分器</view>
+    <view class="p">专业的台球比赛记分工具，随时随地记录精彩瞬间</view>
   </view>
 
+  <!-- Start Match Card -->
   <view class="card">
-    <view class="corner"></view>
-    <view class="card-header">
-      <t-icon name="thunder" size="36rpx" color="#fcbb00"></t-icon>
-      <text class="card-title">开始比赛</text>
+    <view class="card-title">
+      <t-icon name="thunder" size="32rpx" color="#FFB35C" />
+      <text>开始比赛</text>
     </view>
-    <view class="card-desc">选择一种比赛模式，立即开始记分</view>
-    <view class="mode-list">
-      <view class="mode-btn green" bindtap="goMatchBall" hover-class="green-hover">
-        <view class="mode-content">
-          <view class="badge">8</view>
-          <text class="mode-text">去比赛</text>
-        </view>
-        <t-icon name="chevron-right" size="40rpx" class="arrow"></t-icon>
+    <view class="card-desc">选择一种比赛模式，立即开始记录</view>
+    
+    <view class="inner-band band-green">
+      <view class="band-content">
+        <view class="badge-8">8</view>
+        <text>去比赛</text>
       </view>
-    </view>
-  </view>
-
-  <view class="section">
-    <view class="section-title">功能特性</view>
-    <view class="features">
-      <view class="feature-card" hover-class="feature-hover">
-        <view class="feat-content">
-          <t-icon name="chat-double" size="40rpx" color="#2eb873"></t-icon>
-          <text class="feat-title">专业规则</text>
-        </view>
-        <text class="feat-desc">内置标准规则与9球追分规则，支持自定义设置</text>
-      </view>
-      <view class="feature-card" hover-class="feature-hover">
-        <view class="feat-content">
-          <t-icon name="history" size="40rpx" color="#ff8b1a"></t-icon>
-          <text class="feat-title">历史记录</text>
-        </view>
-        <text class="feat-desc">本地保存比赛记录，随时回顾过去战绩</text>
-      </view>
-      <view class="feature-card" hover-class="feature-hover">
-        <view class="feat-content">
-          <t-icon name="chart-radial" size="40rpx" color="#f5c73d"></t-icon>
-          <text class="feat-title">数据统计</text>
-        </view>
-        <text class="feat-desc">详细的普胜、炸清、接清数据分析</text>
-      </view>
-      <view class="feature-card" hover-class="feature-hover">
-        <view class="feat-content">
-          <t-icon name="usergroup-add" size="40rpx" color="#6fb1ff"></t-icon>
-          <text class="feat-title">多人模式</text>
-        </view>
-        <text class="feat-desc">支持2-3人防守技战，灵活适应不同场景</text>
+      <view class="btn-cta btn-green" bindtap="goMatchBall">
+        <t-icon name="chevron-right" size="32rpx" color="#fff" />
       </view>
     </view>
   </view>
 
-  <view class="notice">
-    <t-icon name="info-circle" size="36rpx" color="#ff8b1a"></t-icon>
-    <text class="notice-text">温馨提示：本应用为本地离线模式，所有比赛数据仅保存在当前设备中，清理缓存或重装程序可能会导致数据丢失。</text>
+  <!-- Play Duration Card -->
+  <view class="card">
+    <view class="card-title">
+      <t-icon name="time" size="32rpx" color="#5CE1B9" />
+      <text>打球时长</text>
+    </view>
+    <view class="card-desc">从开始到结束，统计本次练球时间</view>
+    
+    <view class="inner-band band-orange">
+      <view class="band-content">
+        <view class="timer-text">
+          <view class="timer-icon">
+            <t-icon name="time" size="28rpx" color="#fff" />
+          </view>
+          <text>{{playingText}}</text>
+        </view>
+      </view>
+      <view class="btn-cta btn-orange" bindtap="togglePlaying">
+        <text>{{playingIsRunning ? '关灯' : '开灯'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Features Section -->
+  <view class="section-label">功能特性</view>
+  
+  <view class="feature-grid">
+    <!-- Tile 1 -->
+    <view class="feature-tile">
+      <view class="feature-header">
+        <t-icon name="chat-double" size="36rpx" color="#1CC88A" />
+        <text class="feature-title">专业规则</text>
+      </view>
+      <text class="feature-desc">内置标准规则与9球追分规则，支持自定义设置</text>
+    </view>
+
+    <!-- Tile 2 -->
+    <view class="feature-tile">
+      <view class="feature-header">
+        <t-icon name="history" size="36rpx" color="#FF9A3D" />
+        <text class="feature-title">历史记录</text>
+      </view>
+      <text class="feature-desc">本地保存记分记录，随时回顾过去战绩</text>
+    </view>
+
+    <!-- Tile 3 -->
+    <view class="feature-tile">
+      <view class="feature-header">
+        <t-icon name="chart-bar" size="36rpx" color="#3B82F6" />
+        <text class="feature-title">数据统计</text>
+      </view>
+      <text class="feature-desc">详细数据曲线、炸清、接清数据分析</text>
+    </view>
+
+    <!-- Tile 4 -->
+    <view class="feature-tile">
+      <view class="feature-header">
+        <t-icon name="usergroup-add" size="36rpx" color="#8B5CF6" />
+        <text class="feature-title">多人模式</text>
+      </view>
+      <text class="feature-desc">支持2-3人防守比分，灵活适应不同场景</text>
+    </view>
   </view>
 </view>

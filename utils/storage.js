@@ -4,7 +4,13 @@ const KEYS = {
   eightHistory: 'zhongba_match_history',
   nineRules: 'zhuifen_rules',
   nineCurrent: 'zhuifen_match_current',
-  nineHistory: 'zhuifen_match_history'
+  nineHistory: 'zhuifen_match_history',
+  playCurrent: 'global_play_current',
+  playTotal: 'global_play_total',
+  playHistory: 'global_play_history',
+  trainingModes: 'training_modes',
+  trainingCurrent: 'training_current',
+  trainingHistory: 'training_history'
 }
 
 function safeGet(key) {
@@ -93,4 +99,26 @@ const rules = {
   setNineRules(r) { safeSet(KEYS.nineRules, r) }
 }
 
-module.exports = { keys: KEYS, get: safeGet, set: safeSet, remove: safeRemove, ongoing, eight, nine, rules, cleanupOrphans }
+const play = {
+  getCurrent() { return safeGet(KEYS.playCurrent) || { isRunning: false, runningSince: 0, elapsedTime: 0 } },
+  setCurrent(obj) { if (obj == null) safeRemove(KEYS.playCurrent); else safeSet(KEYS.playCurrent, obj) },
+  getTotalSeconds() { const v = safeGet(KEYS.playTotal); return typeof v === 'number' && v >= 0 ? v : 0 },
+  setTotalSeconds(sec) { const n = Number(sec) || 0; safeSet(KEYS.playTotal, n) },
+  getHistory() { return ensureArray(safeGet(KEYS.playHistory) || []) },
+  setHistory(list) { safeSet(KEYS.playHistory, Array.isArray(list) ? list : []) },
+  addHistory(record) { const hist = this.getHistory(); hist.push(record); safeSet(KEYS.playHistory, hist); return hist }
+}
+
+const training = {
+  getModes() { return ensureArray(safeGet(KEYS.trainingModes) || []) },
+  setModes(list) { safeSet(KEYS.trainingModes, Array.isArray(list) ? list : []) },
+  addMode(mode) { const list = this.getModes(); list.push(mode); this.setModes(list); return list },
+  removeMode(id) { const list = this.getModes().filter(m => m.id !== id); this.setModes(list); return list },
+  getCurrent() { return safeGet(KEYS.trainingCurrent) || null },
+  setCurrent(obj) { if (obj == null) safeRemove(KEYS.trainingCurrent); else safeSet(KEYS.trainingCurrent, obj) },
+  getHistory() { return ensureArray(safeGet(KEYS.trainingHistory) || []) },
+  setHistory(list) { safeSet(KEYS.trainingHistory, Array.isArray(list) ? list : []) },
+  addHistory(record) { const hist = this.getHistory(); hist.push(record); safeSet(KEYS.trainingHistory, hist); return hist }
+}
+
+module.exports = { keys: KEYS, get: safeGet, set: safeSet, remove: safeRemove, ongoing, eight, nine, rules, play, training, cleanupOrphans }

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>训练对局 · 计分面板</title>
+  <!-- Lucide icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root{
+      --bg:#0a0f1a;
+      --card:#1a2332;
+      --card-2:#111827;
+      --border:#2a3a50;
+      --text:#ffffff;
+      --muted:#94a3b8;
+      --shadow:0 4px 20px rgba(0,0,0,.3);
+
+      --green:#10b981;
+      --blue:#3b82f6;
+      --orange:#f59e0b;
+      --red:#ef4444;
+      --chip:#1a2332;
+      --chip-border:#2a3a50;
+      --focus:#60a5fa;
+      --radius:16px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:linear-gradient(135deg, var(--bg) 0%, #0f172a 100%);
+      color:var(--text); font:14px/1.4 system-ui, -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    .app{
+      max-width:420px; margin:0 auto; min-height:100%;
+      display:flex; flex-direction:column; gap:16px; padding:20px 16px 24px;
+    }
+
+    /* Top bar */
+    .top{
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .game-tag{
+      background:rgba(16, 185, 129, 0.15);
+      color:var(--green); border:1px solid rgba(16, 185, 129, 0.3);
+      padding:6px 12px; border-radius:999px; font-weight:600; font-size:13px;
+      box-shadow:0 2px 8px rgba(16, 185, 129, 0.15);
+    }
+
+    .timer{
+      display:flex; align-items:center; gap:8px;
+      background:var(--chip); border:1px solid var(--chip-border);
+      padding:8px 14px; border-radius:999px; box-shadow:var(--shadow);
+    }
+    .time{
+      font-weight:700; font-variant-numeric:tabular-nums; font-size:15px; letter-spacing:0.5px;
+    }
+    .pause-pill{
+      color:var(--red); background:rgba(239, 68, 68, 0.15);
+      border:1px solid rgba(239, 68, 68, 0.3);
+      padding:2px 8px; border-radius:999px; font-weight:600; font-size:11px;
+    }
+
+    /* Scoreboard */
+    .panel{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius); padding:20px; box-shadow:var(--shadow);
+    }
+    .score-grid{display:grid; grid-template-columns:1fr 80px 1fr; gap:12px; align-items:center}
+    .player-card{
+      position:relative; background:var(--card-2);
+      border:1px solid var(--border); border-radius:14px; padding:16px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+    }
+    .player-card.active {
+      border-color: var(--green);
+      box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.3);
+    }
+    .player-name{
+      color:var(--muted); font-weight:600; font-size:13px; margin-bottom:4px;
+    }
+    .score{
+      font-size:48px; font-weight:800; line-height:1;
+      text-shadow:0 2px 10px rgba(0,0,0,.3);
+    }
+    
+    .round-card{
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:8px;
+    }
+    .round-tag{
+      font-size:12px; color:var(--muted); font-weight:600;
+      background:var(--card-2); padding:4px 10px; border-radius:12px; border:1px solid var(--border);
+    }
+    .vs{
+      font-size:14px; font-weight:800; color:var(--muted); font-style:italic; opacity:0.5;
+    }
+
+    .hint{
+      margin-top:12px; text-align:center; color:var(--muted);
+      font-size:12px; opacity:0.7;
+    }
+
+    /* Stat blocks */
+    .stats{
+      display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;
+    }
+    .stat-card{
+      background:var(--card-2); border:1px solid var(--border); border-radius:12px; padding:12px;
+    }
+    .stat-title{
+      font-weight:700; color:var(--text); margin-bottom:10px; font-size:14px; text-align:center;
+    }
+    .stat-grid-inner {
+      display:grid; grid-template-columns: 1fr 1fr; gap:8px;
+    }
+    .stat-item {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      background:var(--card); border-radius:8px; padding:8px 4px;
+    }
+    .stat-label {
+      font-size:11px; color:var(--muted); margin-bottom:2px;
+    }
+    .stat-val {
+      font-size:15px; font-weight:700;
+    }
+    .stat-val.green { color:var(--green); }
+    .stat-val.blue { color:var(--blue); }
+    .stat-val.orange { color:var(--orange); }
+    .stat-val.red { color:var(--red); }
+
+    /* Primary actions */
+    .actions{
+      display:grid; grid-template-columns: repeat(4,1fr); gap:10px; margin-top:16px;
+    }
+    .btn{
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      padding:14px 0; border-radius:12px; font-weight:700; font-size:14px;
+      border:1px solid transparent; box-shadow:var(--shadow);
+      user-select:none; color:#fff;
+    }
+    .btn.green{background:var(--green); box-shadow:0 4px 12px rgba(16, 185, 129, 0.3);}
+    .btn.blue{background:var(--blue); box-shadow:0 4px 12px rgba(59, 130, 246, 0.3);}
+    .btn.orange{background:var(--orange); box-shadow:0 4px 12px rgba(245, 158, 11, 0.3);}
+    .btn.red{background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.3); color:var(--red);}
+
+    /* Bottom bar */
+    .toolbar{
+      display:grid; grid-template-columns: repeat(3,1fr); gap:12px; margin-top:auto;
+    }
+    .tool{
+      background:var(--card); border:1px solid var(--border); border-radius:12px;
+      padding:14px; display:flex; align-items:center; justify-content:center; gap:8px;
+      color:var(--text); font-weight:600; font-size:14px;
+    }
+    .tool:hover { background:var(--card-2); }
+    .tool.red{border-color:rgba(239, 68, 68, 0.3); color:var(--red); background:rgba(239, 68, 68, 0.1);}
+
+    /* Modal */
+    .modal{
+      position:fixed; inset:0; display:none; place-items:center; padding:24px;
+      background:rgba(0,0,0,.7); backdrop-filter:blur(4px); z-index:100;
+    }
+    .modal.open{display:grid}
+    .dialog{
+      width:min(320px, 90vw); background:var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:20px; box-shadow:var(--shadow);
+    }
+    .dialog h3{margin:0 0 16px; font-weight:700; text-align:center; font-size:16px;}
+    .field{
+      width:100%; background:var(--bg); border:1px solid var(--border); border-radius:10px;
+      padding:12px; color:var(--text); font-size:14px; margin-bottom:20px;
+    }
+    .field:focus { border-color:var(--blue); outline:none; }
+    .dialog-actions{
+      display:flex; gap:12px;
+    }
+    .ghost{flex:1; background:transparent; border:1px solid var(--border); color:var(--text); border-radius:10px; padding:10px; font-weight:600; cursor:pointer;}
+    .primary{flex:1; background:var(--green); border:none; color:white; border-radius:10px; padding:10px; font-weight:600; cursor:pointer;}
+
+    /* Icons */
+    .icon{width:18px; height:18px}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <div class="game-tag">中式黑八</div>
+      <div class="timer" aria-live="polite">
+        <span class="time">00:00:06</span>
+        <span class="pause-pill">暂停</span>
+      </div>
+    </header>
+
+    <div class="panel">
+      <div class="score-grid">
+        <div class="player-card active" data-player="A" title="长按可改名">
+          <div class="player-name">A玩家</div>
+          <div class="score">0</div>
+        </div>
+
+        <div class="round-card">
+          <div class="round-tag">第 1 局</div>
+          <div class="vs">VS</div>
+        </div>
+
+        <div class="player-card" data-player="B" title="长按可改名">
+          <div class="player-name">B玩家</div>
+          <div class="score">0</div>
+        </div>
+      </div>
+      <div class="hint">长按玩家姓名可以修改</div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-title">A玩家</div>
+          <div class="stat-grid-inner">
+            <div class="stat-item">
+              <span class="stat-label">普胜</span>
+              <span class="stat-val green">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">接清</span>
+              <span class="stat-val blue">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">炸清</span>
+              <span class="stat-val orange">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">犯规</span>
+              <span class="stat-val red">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-title">B玩家</div>
+          <div class="stat-grid-inner">
+            <div class="stat-item">
+              <span class="stat-label">普胜</span>
+              <span class="stat-val green">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">接清</span>
+              <span class="stat-val blue">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">炸清</span>
+              <span class="stat-val orange">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">犯规</span>
+              <span class="stat-val red">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions" role="group" aria-label="记录事件">
+      <button class="btn green">普胜</button>
+      <button class="btn blue">接清</button>
+      <button class="btn orange">炸清</button>
+      <button class="btn red">犯规</button>
+    </div>
+
+    <nav class="toolbar" aria-label="底部操作">
+      <button class="tool"><i data-lucide="undo-2" class="icon"></i> 撤销</button>
+      <button class="tool"><i data-lucide="refresh-ccw" class="icon"></i> 重开</button>
+      <button class="tool red"><i data-lucide="circle-off" class="icon"></i> 结束</button>
+    </nav>
+  </main>
+
+  <!-- Rename Modal -->
+  <div class="modal" id="rename-modal" aria-hidden="true">
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="rename-title">
+      <h3 id="rename-title">修改玩家姓名</h3>
+      <input class="field" aria-label="玩家姓名" placeholder="A玩家" value="A玩家" />
+      <div class="dialog-actions">
+        <button class="ghost">取消</button>
+        <button class="primary">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

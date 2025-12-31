@@ -1,0 +1,101 @@
+<view class="container cn-padding">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-top">
+      <view class="back-btn" bindtap="goBack" wx:if="{{showBack}}">
+        <t-icon name="chevron-left" size="40rpx" />
+      </view>
+      <text class="h1">训练中心</text>
+    </view>
+    <text class="p">管理与选择训练模式</text>
+  </view>
+
+  <!-- Stats Bar -->
+  <view class="stats-bar">
+    <view class="stat-item">
+      <view class="stat-icon blue">
+        <t-icon name="layers" size="36rpx" />
+      </view>
+      <view class="stat-content">
+        <text class="stat-value">{{modes.length || 0}}</text>
+        <text class="stat-label">训练模式</text>
+      </view>
+    </view>
+    <view class="stat-item">
+      <view class="stat-icon green">
+        <t-icon name="chart-bubble" size="36rpx" />
+      </view>
+      <view class="stat-content">
+        <text class="stat-value">{{totalSessions || 0}}</text>
+        <text class="stat-label">累计训练</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Add Training Mode -->
+  <view class="section">
+    <view class="section-header">
+      <t-icon name="add-circle" size="36rpx" class="icon" />
+      <text class="section-title">新增训练模式</text>
+    </view>
+    <view class="add-form">
+      <view class="input-wrapper">
+        <input type="text" class="input" placeholder="输入训练模式名称" placeholder-class="input-placeholder" value="{{newModeName}}" bindinput="onNameInput" />
+      </view>
+      <view class="add-btn" bindtap="addMode">
+        <t-icon name="add" size="32rpx" />
+        <text>添加</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Training List -->
+  <view class="section">
+    <view class="section-header">
+      <t-icon name="view-module" size="36rpx" class="icon" />
+      <text class="section-title">训练模式列表</text>
+    </view>
+    <view class="training-list">
+      <block wx:if="{{modes.length}}">
+        <block wx:for="{{modes}}" wx:key="id">
+          <view class="training-item">
+            <view class="training-info">
+              <view class="training-icon">
+                <t-icon name="focus" size="40rpx" />
+              </view>
+              <view class="training-text">
+                <view class="training-name">{{item.name}}</view>
+                <view class="training-meta">已训练 {{item.count || 0}} 次</view>
+              </view>
+            </view>
+            <view class="training-actions">
+              <view class="enter-btn" bindtap="enterMode" data-id="{{item.id}}" data-name="{{item.name}}">
+                <t-icon name="play-circle" size="28rpx" />
+                <text>进入训练</text>
+              </view>
+              <view class="more-btn" bindtap="deleteMode" data-id="{{item.id}}" data-name="{{item.name}}">
+                <t-icon name="close-circle" color="red" size="32rpx" />
+              </view>
+            </view>
+          </view>
+        </block>
+      </block>
+      <block wx:else>
+        <view class="empty-state">
+          <t-icon name="info-circle" size="48rpx" class="icon" />
+          <text>暂无训练模式，先新增一个吧</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- Bottom Action -->
+  <view class="bottom-action">
+    <view class="bottom-action-inner">
+      <view class="record-btn" bindtap="goHistory">
+        <t-icon name="time" size="36rpx" />
+        <text>训练记录</text>
+      </view>
+    </view>
+  </view>
+</view>

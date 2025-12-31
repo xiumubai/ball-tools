@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>比赛记录</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: #1a2332;
+      --bg-input: #0d1320;
+      --border-color: #2a3a50;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-blue: #3b82f6;
+      --accent-blue-hover: #2563eb;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-red: #ef4444;
+      --accent-orange: #f59e0b;
+      --accent-yellow: #eab308;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, #0f172a 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 24px 16px;
+      padding-bottom: 40px;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 24px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .back-btn:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-left: 48px;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .kpi-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kpi-value.green { color: var(--accent-green); }
+    .kpi-value.red { color: var(--accent-red); }
+    .kpi-value.yellow { color: var(--accent-yellow); }
+
+    .kpi-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, var(--accent-green) 0%, #059669 100%);
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .tab:hover:not(.active) {
+      color: var(--text-primary);
+    }
+
+    /* Match List */
+    .list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .match-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .match-card:hover {
+      border-color: var(--accent-green);
+      transform: translateY(-2px);
+    }
+
+    .match-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge.green {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent-green);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .badge.orange {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--accent-orange);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .match-time {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-left: auto;
+      margin-right: 8px;
+    }
+
+    .match-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin-bottom: 16px;
+    }
+
+    .match-body {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .player {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .player.left {
+      text-align: left;
+    }
+
+    .player.right {
+      text-align: right;
+    }
+
+    .score {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .player-name {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .vs-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: -16px; /* Visual adjustment to align with score center */
+    }
+
+    /* Empty State */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-top">
+        <button class="back-btn">
+          <i data-lucide="chevron-left" style="width: 20px; height: 20px;"></i>
+        </button>
+        <h1>比赛记录</h1>
+      </div>
+      <p>查看过往对局数据</p>
+    </header>
+
+    <!-- KPI Stats -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-value">3</div>
+        <div class="kpi-label">总场次</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value green">2</div>
+        <div class="kpi-label">胜</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value red">0</div>
+        <div class="kpi-label">负</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value yellow">67%</div>
+        <div class="kpi-label">胜率</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active">全部</div>
+      <div class="tab">8球</div>
+      <div class="tab">9球</div>
+    </div>
+
+    <!-- Match List -->
+    <div class="list-container">
+      <!-- Card 1 -->
+      <div class="match-card">
+        <div class="match-header">
+          <span class="badge green">8球</span>
+          <span class="match-time">2025-12-30 11:49</span>
+          <i data-lucide="arrow-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+        </div>
+        
+        <div class="match-body">
+          <div class="player left">
+            <span class="score">3</span>
+            <span class="player-name">A玩家</span>
+          </div>
+          <span class="vs-label">vs</span>
+          <div class="player right">
+            <span class="score">3</span>
+            <span class="player-name">B玩家</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="match-card">
+        <div class="match-header">
+          <span class="badge orange">9球</span>
+          <span class="match-time">2025-12-30 11:48</span>
+          <i data-lucide="arrow-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+        </div>
+        
+        <div class="match-body">
+          <div class="player left">
+            <span class="score">111</span>
+            <span class="player-name">玩家A</span>
+          </div>
+          <span class="vs-label">vs</span>
+          <div class="player right">
+            <span class="score">89</span>
+            <span class="player-name">玩家B</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="match-card">
+        <div class="match-header">
+          <span class="badge orange">9球</span>
+          <span class="match-time">2025-12-30 11:47</span>
+          <i data-lucide="arrow-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+        </div>
+        
+        <div class="match-body">
+          <div class="player left">
+            <span class="score">177</span>
+            <span class="player-name">玩家A</span>
+          </div>
+          <span class="vs-label">vs</span>
+          <div class="player right">
+            <span class="score">23</span>
+            <span class="player-name">玩家B</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

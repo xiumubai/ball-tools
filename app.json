@@ -6,7 +6,11 @@
     "pages/history-detail/history-detail",
     "pages/profile/profile",
     "pages/nine-ball/nine-ball",
-    "pages/eight-ball/eight-ball"
+    "pages/eight-ball/eight-ball",
+    "pages/training/index",
+    "pages/training/session",
+    "pages/training/history",
+    "pages/playtime/history"
   ],
   "window": {
     "navigationBarTextStyle": "white",

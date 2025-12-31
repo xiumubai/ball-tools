@@ -1,0 +1,72 @@
+<view class="container">
+
+  <!-- Mode Selection -->
+  <scroll-view class="mode-scroll" scroll-x enable-flex show-scrollbar="{{false}}">
+    <block wx:for="{{modes}}" wx:key="id">
+      <view class="mode-chip {{selectedModeId === item.id ? 'active' : ''}}" data-id="{{item.id}}" bindtap="switchMode">
+        {{item.name}}
+      </view>
+    </block>
+  </scroll-view>
+
+  <!-- Mode Summary -->
+  <view class="section">
+    <view class="section-header">
+      <t-icon name="chart-bubble" size="36rpx" color="#9ca3af" style="margin-right: 20rpx;" />
+      <text class="section-title">模式汇总</text>
+    </view>
+    <view class="list-container">
+      <block wx:if="{{modesSummary.length}}">
+        <block wx:for="{{modesSummary}}" wx:key="modeId">
+          <view class="list-item">
+            <view class="item-header">
+              <view class="badge">
+                <t-icon name="certificate" size="28rpx" style="margin-right: 8rpx;" />
+                <text>{{item.modeName}}</text>
+              </view>
+            </view>
+            <view class="item-stats">
+              <text class="stat-text">次数 {{item.sessionsCount}}  时长 {{item.totalTimeText}}  进 {{item.hits}} / 丢 {{item.misses}}</text>
+              <text class="hit-rate">命中率 {{item.accuracyText}}</text>
+            </view>
+          </view>
+        </block>
+      </block>
+      <block wx:else>
+        <view class="empty-state">
+          <text>暂无模式数据</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- Training Details -->
+  <view class="list-container" style="padding-bottom: 40rpx;">
+    <block wx:if="{{sessions.length}}">
+      <block wx:for="{{sessions}}" wx:key="id">
+        <view class="log-item">
+          <view class="log-header">
+            <view class="badge">
+              <t-icon name="circle" size="28rpx" style="margin-right: 8rpx;" />
+              <text>{{item.modeName}}</text>
+            </view>
+            <text class="log-time">{{item.date}} {{item.time}}</text>
+          </view>
+          <view class="log-divider"></view>
+          <view class="log-details">
+            <view class="detail-item">时长 <text class="highlight">{{item.elapsedText}}</text></view>
+            <view class="detail-item">进 <text class="highlight">{{item.hits}}</text></view>
+            <view class="detail-item">失 <text class="highlight">{{item.misses}}</text></view>
+            <text class="hit-rate" style="margin-left: auto;">命中率 {{item.accuracyText}}</text>
+          </view>
+        </view>
+      </block>
+    </block>
+    <block wx:else>
+      <view class="empty-state">
+        <t-icon name="info-circle" size="48rpx" color="#6b7280" />
+        <text style="margin-top: 16rpx;">暂无训练记录</text>
+      </view>
+    </block>
+  </view>
+</view>

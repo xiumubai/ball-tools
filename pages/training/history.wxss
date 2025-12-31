@@ -1,0 +1,196 @@
+
+.container {
+  padding: 48rpx 32rpx;
+  max-width: 100%;
+}
+
+/* Mode Selection */
+.mode-scroll {
+  display: flex;
+  flex-direction: row;
+  white-space: nowrap;
+  margin-bottom: 48rpx;
+  height: 80rpx; /* Ensure height for chips */
+}
+
+.mode-chip {
+  display: inline-flex;
+  padding: 16rpx 32rpx;
+  margin-right: 20rpx;
+  background: var(--bg-card);
+  border: 2rpx solid var(--border-color);
+  border-radius: 40rpx;
+  color: var(--text-secondary);
+  font-size: 26rpx;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.mode-chip.active {
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-hover) 100%);
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 8rpx 24rpx rgba(59, 130, 246, 0.3);
+}
+
+/* KPI Grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+  margin-bottom: 48rpx;
+}
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 2rpx solid var(--border-color);
+  border-radius: 24rpx;
+  padding: 32rpx 16rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.kpi-value {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+}
+
+.kpi-label {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+}
+
+/* Section Styles */
+.section {
+  background: var(--bg-card);
+  border: 2rpx solid var(--border-color);
+  border-radius: 32rpx;
+  padding: 40rpx;
+  margin-bottom: 40rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 2rpx solid var(--border-color);
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* List Styles */
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.list-item {
+  background: var(--bg-secondary);
+  border: 2rpx solid var(--border-color);
+  border-radius: 24rpx;
+  padding: 28rpx 32rpx;
+}
+
+.item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8rpx 20rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2rpx solid var(--border-color);
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.item-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 24rpx;
+  flex-wrap: wrap;
+  gap: 10rpx;
+}
+
+.stat-text {
+  color: var(--text-secondary);
+}
+
+.hit-rate {
+  color: var(--accent-green);
+  font-weight: 600;
+  font-size: 24rpx;
+}
+
+/* Training Log Specific */
+.log-item {
+  background: var(--bg-card);
+  border: 2rpx solid var(--border-color);
+  border-radius: 24rpx;
+  padding: 32rpx;
+}
+
+.log-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.log-time {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.log-divider {
+  height: 2rpx;
+  background: var(--border-color);
+  margin-bottom: 24rpx;
+}
+
+.log-details {
+  display: flex;
+  align-items: center;
+  gap: 32rpx;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.highlight {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+  color: var(--text-muted);
+  font-size: 28rpx;
+}

@@ -1,4 +1,5 @@
-.card { margin: 24rpx 32rpx; padding: 24rpx; border-radius: 16rpx }
+.card { margin: 24rpx 32rpx; padding: 24rpx; background: var(--bg-card);
+    border: 1px solid var(--border-color);border-radius: var(--radius-lg); }
 .card-header { display:flex; align-items:center; justify-content: space-between; margin-bottom: 16rpx }
 .time { font-size: 28rpx; color: #9aa5af }
 .players { display:grid; gap: 24rpx; padding: 16rpx 0 }
@@ -10,9 +11,29 @@
 .score-x { font-size: 56rpx; font-weight: 900; color: #eaeef2 }
 .win { color: #2eb873; border-color: #f5c73d }
 .round { display:block; text-align:center; padding: 8rpx 0 }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8rpx 20rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.badge.green {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent-green);
+  border: 2rpx solid rgba(16, 185, 129, 0.2);
+}
+
+.badge.orange {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--accent-orange);
+  border: 2rpx solid rgba(245, 158, 11, 0.2);
+}
 
 .seg-tabs { margin: 0 32rpx 16rpx; display:flex; align-items:center; gap:12rpx; background: rgba(255,255,255,0.06); border-radius: 999rpx; padding: 8rpx }
-.seg-item { flex:1; text-align:center; padding: 16rpx 24rpx; border-radius: 999rpx; color:#eaeef2; font-size: 26rpx; font-weight: 600 }
+.seg-item { flex:1; text-align:center; padding: 16rpx 24rpx; border-radius: 999rpx; color:#eaeef2; font-size: 26rpx; font-weight: 600; transition: all 0.3s ease; }
 .seg-item.active { background:#2eb873; color:#fff }
 
 .table { margin: 0 32rpx 24rpx; padding: 16rpx; border-radius: 16rpx }

@@ -1,72 +1,77 @@
-<view class="safe-page">
-  
-
-<!-- 统计数据 -->
-  <view class="summary">
-    <view class="summary-card bg-card border-border glass">
-      <text class="summary-value text-foreground">{{stats.total}}</text>
-      <text class="summary-label text-muted-foreground">总场次</text>
+<view class="container cn-padding">
+  <!-- KPI Grid -->
+  <view class="kpi-grid">
+    <view class="kpi-card">
+      <text class="kpi-value">{{stats.total}}</text>
+      <text class="kpi-label">总场次</text>
     </view>
-    <view class="summary-card bg-card border-border glass">
-      <text class="summary-value text-primary">{{stats.wins}}</text>
-      <text class="summary-label text-muted-foreground">胜</text>
+    <view class="kpi-card">
+      <text class="kpi-value green">{{stats.wins}}</text>
+      <text class="kpi-label">胜</text>
     </view>
-    <view class="summary-card bg-card border-border glass">
-      <text class="summary-value text-destructive">{{stats.losses}}</text>
-      <text class="summary-label text-muted-foreground">负</text>
+    <view class="kpi-card">
+      <text class="kpi-value red">{{stats.losses}}</text>
+      <text class="kpi-label">负</text>
     </view>
-    <view class="summary-card bg-card border-border glass">
-      <text class="summary-value text-accent">{{stats.winRate}}</text>
-      <text class="summary-label text-muted-foreground">胜率</text>
+    <view class="kpi-card">
+      <text class="kpi-value yellow">{{stats.winRate}}</text>
+      <text class="kpi-label">胜率</text>
     </view>
   </view>
 
-  <!-- 自定义tabs -->
-  <view class="seg-tabs">
-    <view class="seg-item {{filterTab=='all'?'active':''}}" data-val="all" bindtap="switchFilter">全部</view>
-    <view class="seg-item {{filterTab=='eight'?'active':''}}" data-val="eight" bindtap="switchFilter">8球</view>
-    <view class="seg-item {{filterTab=='nine'?'active':''}}" data-val="nine" bindtap="switchFilter">9球</view>
+  <!-- Tabs -->
+  <view class="tabs">
+    <view class="tab {{filterTab=='all'?'active':''}}" data-val="all" bindtap="switchFilter">全部</view>
+    <view class="tab {{filterTab=='eight'?'active':''}}" data-val="eight" bindtap="switchFilter">8球</view>
+    <view class="tab {{filterTab=='nine'?'active':''}}" data-val="nine" bindtap="switchFilter">9球</view>
   </view>
 
-
-  <block wx:if="{{displayMatches.length==0}}">
-    <view class="empty">
-      <t-icon name="no-result" size="100rpx"></t-icon>
-      <view>暂无比赛记录</view>
-    </view>
-  </block>
-
-  <scroll-view scroll-y style="flex:1">
-    <block wx:for="{{displayMatches}}" wx:key="id">
-      <t-swipe-cell>
-        <view class="record bg-card border-border glass" bindtap="openDetail" data-type="{{item.type}}" data-ts="{{item.ts}}">
-          <view class="record-header">
-            <t-tag size="small" shape="round" variant="light" theme="{{item.type=='8球'?'success':'warning'}}">{{item.type}}</t-tag>
-            <text class="time text-muted-foreground">{{item.date}} {{item.time}}</text>
-            <t-icon name="arrow-right" size="28rpx"></t-icon>
+  <!-- Match List -->
+  <view class="list-container">
+    <block wx:if="{{displayMatches.length}}">
+      <block wx:for="{{displayMatches}}" wx:key="id">
+        <t-swipe-cell>
+          <view class="match-card" bindtap="openDetail" data-type="{{item.type}}" data-ts="{{item.ts}}">
+            <view class="match-header">
+              <view class="badge {{item.type=='8球'?'green':'orange'}}">{{item.type}}</view>
+              <text class="match-time">{{item.date}} {{item.time}}</text>
+              <t-icon name="arrow-right" size="32rpx" color="#6b7280" />
+            </view>
+            
+            <view class="match-divider"></view>
+            
+            <view class="match-body">
+              <view class="player left">
+                <text class="score">{{item.players[0].score}}</text>
+                <text class="player-name">{{item.players[0].name}}</text>
+              </view>
+              <text class="vs-label">vs</text>
+              <view class="player right">
+                <text class="score">{{item.players[1].score}}</text>
+                <text class="player-name">{{item.players[1].name}}</text>
+              </view>
+              <block wx:if="{{ item.players.length > 2 }}">
+                <text class="vs-label">vs</text>
+                <view class="player">
+                  <text class="score">{{item.players[2].score}}</text>
+                  <text class="player-name">{{item.players[2].name}}</text>
+                </view>
+              </block>
+            </view>
           </view>
-          <view class="match-row">
-            <view class="side">
-              <text class="score-x">{{item.players[0].score}}</text>
-              <text class="pname">{{item.players[0].name}}</text>
-            </view>
-            <text class="vs">vs</text>
-            <view class="side">
-              <text class="score-x">{{item.players[1].score}}</text>
-              <text class="pname">{{item.players[1].name}}</text>
-            </view>
-            <text class="vs" wx:if="{{item.players.length>2}}">vs</text>
-            <view class="side" wx:if="{{item.players.length>2}}">
-              <text class="score-x">{{item.players[2].score}}</text>
-              <text class="pname">{{item.players[2].name}}</text>
-            </view>
+          
+          <view slot="right" class="swipe-right delete" data-id="{{item.id}}" data-type="{{item.type}}" data-ts="{{item.ts}}" bindtap="onSwipeDelete">
+            <t-icon name="delete" size="32rpx" color="#ffffff" />
+            <text>删除</text>
           </view>
-        </view>
-        <view slot="right" class="swipe-right delete" data-id="{{item.id}}" data-type="{{item.type}}" data-ts="{{item.ts}}" bindtap="onSwipeDelete">
-          <t-icon name="delete" size="28rpx"></t-icon>
-          <text>删除</text>
-        </view>
-      </t-swipe-cell>
+        </t-swipe-cell>
+      </block>
     </block>
-  </scroll-view>
+    <block wx:else>
+      <view class="empty-state">
+        <t-icon name="info-circle" size="48rpx" color="#6b7280" />
+        <text style="margin-top: 16rpx;">暂无比赛记录</text>
+      </view>
+    </block>
+  </view>
 </view>

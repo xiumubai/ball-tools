@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>设置与关于</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --border-color: rgba(71, 85, 105, 0.5);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+      --transition: all 0.2s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(160deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
+      min-height: 100vh;
+      color: var(--text-primary);
+      padding: 24px 16px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 28px;
+    }
+
+    .header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Section - 可扩展的功能区块 */
+    .section {
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    .section-title .icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Card */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    /* Menu Item - 可点击的菜单项 */
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .menu-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .menu-item:active {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .menu-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 14px;
+      flex-shrink: 0;
+    }
+
+    .menu-icon .icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .menu-icon.blue {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent-blue);
+    }
+
+    .menu-icon.green {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+    }
+
+    .menu-icon.amber {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+    }
+
+    .menu-icon.red {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+    }
+
+    .menu-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .menu-content .title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .menu-content .desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .menu-arrow {
+      width: 20px;
+      height: 20px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .menu-value {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-right: 8px;
+      font-family: 'SF Mono', Consolas, monospace;
+    }
+
+    /* Info List - 静态信息展示 */
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .info-item .label {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .info-item .value {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .tag.blue {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent-blue);
+    }
+
+    .tag.green {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+    }
+
+    /* Warning Box */
+    .warning-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(245, 158, 11, 0.08);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .warning-box .icon {
+      width: 18px;
+      height: 18px;
+      color: var(--accent-amber);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .warning-box p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Danger Zone */
+    .danger-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+    }
+
+    .danger-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .danger-info .icon {
+      width: 20px;
+      height: 20px;
+      color: var(--accent-red);
+    }
+
+    .danger-info .text .title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .danger-info .text .desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .btn-danger {
+      padding: 8px 16px;
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      padding: 16px;
+    }
+
+    .footer p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>设置</h1>
+      <p>管理您的数据和应用偏好</p>
+    </header>
+
+    <!-- 功能入口 Section -->
+    <div class="section">
+      <div class="section-title">
+        <i data-lucide="layout-grid" class="icon"></i>
+        功能
+      </div>
+      <div class="card">
+        <div class="menu-item">
+          <div class="menu-icon blue">
+            <i data-lucide="clock" class="icon"></i>
+          </div>
+          <div class="menu-content">
+            <div class="title">打球时长记录</div>
+            <div class="desc">查看历史训练时间统计</div>
+          </div>
+          <span class="menu-value">01:39</span>
+          <i data-lucide="chevron-right" class="menu-arrow"></i>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon green">
+            <i data-lucide="target" class="icon"></i>
+          </div>
+          <div class="menu-content">
+            <div class="title">训练</div>
+            <div class="desc">开始新的训练课程</div>
+          </div>
+          <i data-lucide="chevron-right" class="menu-arrow"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- 数据管理 Section -->
+    <div class="section">
+      <div class="section-title">
+        <i data-lucide="database" class="icon"></i>
+        数据管理
+      </div>
+      <div class="card">
+        <div class="warning-box">
+          <i data-lucide="alert-triangle" class="icon"></i>
+          <p>本应用采用离线模式，数据保存在本地存储中。清除浏览器缓存将导致数据丢失。</p>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon amber">
+            <i data-lucide="download" class="icon"></i>
+          </div>
+          <div class="menu-content">
+            <div class="title">导出数据</div>
+            <div class="desc">备份您的训练记录</div>
+          </div>
+          <i data-lucide="chevron-right" class="menu-arrow"></i>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon blue">
+            <i data-lucide="upload" class="icon"></i>
+          </div>
+          <div class="menu-content">
+            <div class="title">导入数据</div>
+            <div class="desc">从备份文件恢复</div>
+          </div>
+          <i data-lucide="chevron-right" class="menu-arrow"></i>
+        </div>
+        
+        <div class="danger-item">
+          <div class="danger-info">
+            <i data-lucide="trash-2" class="icon"></i>
+            <div class="text">
+              <div class="title">清除所有数据</div>
+              <div class="desc">此操作不可恢复</div>
+            </div>
+          </div>
+          <button class="btn-danger">清除</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 关于 Section -->
+    <div class="section">
+      <div class="section-title">
+        <i data-lucide="info" class="icon"></i>
+        关于
+      </div>
+      <div class="card">
+        <div class="info-item">
+          <span class="label">当前版本</span>
+          <span class="tag green">v1.0.0</span>
+        </div>
+        <div class="info-item">
+          <span class="label">累计训练时长</span>
+          <span class="tag blue">00:01:39</span>
+        </div>
+        <div class="info-item">
+          <span class="label">开发者</span>
+          <span class="value">朴木白</span>
+        </div>
+        <div class="info-item">
+          <span class="label">简介</span>
+          <span class="value">由一个台球爱好者开发</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Made with ♥ for billiard lovers</p>
+    </footer>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

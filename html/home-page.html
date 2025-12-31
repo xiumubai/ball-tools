@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台球计分器</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-gradient-start: #0B1520;
+      --bg-gradient-end: #0E1A24;
+      --card-bg: #0E1A24;
+      --text-white: #FFFFFF;
+      --text-gray: #9AA7B3;
+      --text-light-gray: #B6C0CC;
+      --accent-green-start: #1CC88A;
+      --accent-green-end: #5CE1B9;
+      --accent-orange-start: #FF9A3D;
+      --accent-orange-end: #FFB35C;
+      --accent-deep-orange: #F9812A;
+      --badge-green-start: #0DBA74;
+      --badge-green-end: #33D69F;
+      --radius-card: 16px;
+      --radius-tile: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      color: var(--text-white);
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 24px;
+      padding-top: 24px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: var(--text-light-gray);
+      line-height: 1.4;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-card);
+      padding: 20px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Golden highlight effect */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-white);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-gray);
+      margin-bottom: 16px;
+    }
+
+    /* Inner Band */
+    .inner-band {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 12px;
+      padding: 8px 8px 8px 16px;
+      height: 56px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .band-green {
+      background: linear-gradient(90deg, rgba(28, 200, 138, 0.15) 0%, rgba(92, 225, 185, 0.05) 100%);
+      border: 1px solid rgba(28, 200, 138, 0.2);
+    }
+
+    .band-orange {
+      background: linear-gradient(90deg, rgba(255, 154, 61, 0.15) 0%, rgba(255, 179, 92, 0.05) 100%);
+      border: 1px solid rgba(255, 154, 61, 0.2);
+    }
+
+    /* Badge */
+    .badge-8 {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--badge-green-start) 0%, var(--badge-green-end) 100%);
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(13, 186, 116, 0.3);
+      margin-right: 12px;
+    }
+
+    .band-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+    }
+
+    /* Buttons */
+    .btn-cta {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-green {
+      background: linear-gradient(90deg, var(--accent-green-start) 0%, var(--accent-green-end) 100%);
+      box-shadow: 0 2px 10px rgba(28, 200, 138, 0.3);
+    }
+
+    .btn-orange {
+      background: var(--accent-deep-orange);
+      box-shadow: 0 2px 10px rgba(249, 129, 42, 0.3);
+    }
+
+    .timer-text {
+      font-family: monospace;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-white);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .timer-icon {
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, #FF9A3D 0%, #FFB35C 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 6px rgba(255, 154, 61, 0.3);
+    }
+
+    /* Features Section */
+    .section-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-white);
+      margin: 24px 0 16px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .feature-tile {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-tile);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .feature-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feature-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .feature-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-white);
+    }
+
+    .feature-desc {
+      font-size: 12px;
+      color: var(--text-gray);
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>台球计分器</h1>
+      <p>专业的台球比赛记分工具，随时随地记录精彩瞬间</p>
+    </header>
+
+    <!-- Start Match Card -->
+    <div class="card">
+      <div class="card-title">
+        <i data-lucide="zap" size="16" color="#FFB35C"></i>
+        开始比赛
+      </div>
+      <div class="card-desc">选择一种比赛模式，立即开始记录</div>
+      
+      <div class="inner-band band-green">
+        <div class="band-content">
+          <div class="badge-8">8</div>
+          去比赛
+        </div>
+        <button class="btn-cta btn-green">
+          <i data-lucide="chevron-right" size="16"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Play Duration Card -->
+    <div class="card">
+      <div class="card-title">
+        <i data-lucide="clock" size="16" color="#5CE1B9"></i>
+        打球时长
+      </div>
+      <div class="card-desc">从开始到结束，统计本次练球时间</div>
+      
+      <div class="inner-band band-orange">
+        <div class="band-content">
+            <div class="timer-text">
+                <div class="timer-icon">
+                    <i data-lucide="timer" size="14" color="#FFF"></i>
+                </div>
+                00:00:00
+            </div>
+        </div>
+        <button class="btn-cta btn-orange">开灯</button>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="section-label">功能特性</div>
+    
+    <div class="feature-grid">
+      <!-- Tile 1 -->
+      <div class="feature-tile">
+        <div class="feature-header">
+          <i data-lucide="book-open" size="18" color="#1CC88A"></i>
+          <span class="feature-title">专业规则</span>
+        </div>
+        <p class="feature-desc">内置标准规则与9球追分规则，支持自定义设置</p>
+      </div>
+
+      <!-- Tile 2 -->
+      <div class="feature-tile">
+        <div class="feature-header">
+          <i data-lucide="history" size="18" color="#FF9A3D"></i>
+          <span class="feature-title">历史记录</span>
+        </div>
+        <p class="feature-desc">本地保存记分记录，随时回顾过去战绩</p>
+      </div>
+
+      <!-- Tile 3 -->
+      <div class="feature-tile">
+        <div class="feature-header">
+          <i data-lucide="bar-chart-2" size="18" color="#3B82F6"></i>
+          <span class="feature-title">数据统计</span>
+        </div>
+        <p class="feature-desc">详细数据曲线、炸清、接清数据分析</p>
+      </div>
+
+      <!-- Tile 4 -->
+      <div class="feature-tile">
+        <div class="feature-header">
+          <i data-lucide="users" size="18" color="#8B5CF6"></i>
+          <span class="feature-title">多人模式</span>
+        </div>
+        <p class="feature-desc">支持2-3人防守比分，灵活适应不同场景</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

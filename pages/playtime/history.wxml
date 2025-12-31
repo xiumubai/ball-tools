@@ -1,0 +1,85 @@
+<view class="container cn-padding">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-top">
+      <text class="h1">打球时长记录</text>
+    </view>
+    <text class="p">按天查看练球次数与时长</text>
+  </view>
+
+  <!-- Stats Grid -->
+  <view class="stats-grid">
+    <view class="stat-card duration">
+      <view class="stat-icon">
+        <t-icon name="time" size="40rpx" />
+      </view>
+      <view class="stat-value">{{summary.totalTimeText}}</view>
+      <view class="stat-label">总时长</view>
+    </view>
+    <view class="stat-card count">
+      <view class="stat-icon">
+        <t-icon name="chart-bubble" size="40rpx" />
+      </view>
+      <view class="stat-value">{{summary.totalSessions}}</view>
+      <view class="stat-label">总次数</view>
+    </view>
+  </view>
+
+  <!-- Records Section -->
+  <view class="records-section">
+    <view class="section-header">
+      <view class="section-title">
+        <t-icon name="calendar" size="36rpx" class="icon" />
+        <text>历史记录</text>
+      </view>
+      <view class="filter-btn">
+        <t-icon name="filter" size="28rpx" />
+        <text>筛选</text>
+      </view>
+    </view>
+
+    <scroll-view scroll-y class="records-scroll" enable-flex>
+      <block wx:for="{{days}}" wx:key="date">
+        <view class="date-group expanded">
+          <view class="date-header">
+            <view class="date-info">
+              <view class="date-icon">
+                <t-icon name="calendar" size="32rpx" />
+              </view>
+              <text class="date-text">{{item.date}}</text>
+            </view>
+            <view class="date-summary">
+              <view class="summary-item sessions">
+                <t-icon name="chart-bubble" size="28rpx" />
+                <text>{{item.count}} 次</text>
+              </view>
+              <view class="summary-item time">
+                <t-icon name="time" size="28rpx" />
+                <text>{{item.totalText}}</text>
+              </view>
+              <t-icon name="chevron-down" size="32rpx" class="expand-icon" />
+            </view>
+          </view>
+          
+          <view class="sessions-list">
+            <block wx:for="{{item.sessions}}" wx:key="id" wx:for-item="subItem">
+              <view class="session-item">
+                <view class="session-time">
+                  <view class="time-dot"></view>
+                  <text class="time-range">{{subItem.start}} - {{subItem.end}}</text>
+                </view>
+                <text class="session-duration">{{subItem.duration}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+      </block>
+      
+      <!-- Empty State -->
+      <view class="empty-state" wx:if="{{days.length === 0}}">
+        <t-icon name="info-circle" size="48rpx" class="icon" />
+        <text>暂无训练记录</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>
