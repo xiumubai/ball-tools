@@ -118,6 +118,69 @@ Page({
     });
   },
 
+  randomBreak() {
+    this.saveHistory();
+    this.generateRandomBalls();
+  },
+
+  generateRandomBalls() {
+    const balls = [];
+    const ballSizeRpx = 40;
+    const sys = wx.getSystemInfoSync();
+    const ratio = sys.windowWidth / 750;
+    const ballDiameter = ballSizeRpx * ratio;
+    
+    const w = this.data.tableInnerWidth;
+    const h = this.data.tableInnerHeight;
+    const padding = 10 * ratio; 
+    
+    // 0: 白球, 8: 黑八, 1-7: 全色, 9-15: 花色
+    const numbers = [0, 8, ...[1,2,3,4,5,6,7], ...[9,10,11,12,13,14,15]];
+    
+    // 生成随机位置并确保不重叠
+    for (let i = 0; i < numbers.length; i++) {
+      const num = numbers[i];
+      let type = 'solid';
+      if (num > 8) type = 'stripe';
+      if (num === 8) type = 'solid'; // 8号也是solid样式，但在css中有特殊处理
+      
+      let x, y, overlapped;
+      let attempts = 0;
+      const maxAttempts = 200;
+      
+      do {
+        x = padding + Math.random() * (w - ballDiameter - 2 * padding);
+        y = padding + Math.random() * (h - ballDiameter - 2 * padding);
+        
+        overlapped = false;
+        for (let b of balls) {
+          const dx = x - b.x;
+          const dy = y - b.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          // 增加一点点缓冲距离，避免贴得太紧
+          if (dist < ballDiameter * 1.05) {
+            overlapped = true;
+            break;
+          }
+        }
+        attempts++;
+      } while(overlapped && attempts < maxAttempts);
+      
+      if (!overlapped) {
+        balls.push({
+          id: Date.now() + i, // 确保ID唯一
+          number: num,
+          type,
+          x,
+          y
+        });
+      }
+    }
+    
+    this.setData({ ballsOnTable: balls });
+    wx.showToast({ title: '开球完成', icon: 'none' });
+  },
+
   addBall(e) {
     this.saveHistory(); 
     const { number, type } = e.currentTarget.dataset;
