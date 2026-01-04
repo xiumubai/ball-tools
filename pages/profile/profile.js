@@ -2,7 +2,7 @@
 const storage = require('../../utils/storage')
 Page({
   data: {
-    version: 'v2.1.1',
+    version: 'v2.2.2',
     author: '朽木白',
     desc: '由一个台球爱好者开发',
     totalPlayText: '00:00:00'
