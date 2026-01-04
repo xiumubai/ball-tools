@@ -44,7 +44,7 @@
   <view class="list-container" style="padding-bottom: 40rpx;">
     <block wx:if="{{sessions.length}}">
       <block wx:for="{{sessions}}" wx:key="id">
-        <view class="log-item">
+        <view class="log-item" bindlongpress="deleteItem" data-id="{{item.id}}">
           <view class="log-header">
             <view class="badge">
               <t-icon name="circle" size="28rpx" style="margin-right: 8rpx;" />

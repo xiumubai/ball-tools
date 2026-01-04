@@ -8,7 +8,13 @@ Page({
     summary: { totalSessions: 0, totalTimeText: '00:00:00', totalHits: 0, totalMisses: 0, accuracyText: '0%' },
     modesSummary: []
   },
-  onLoad() { this.loadModes(); this.loadData() },
+  onLoad(options) {
+    if (options && options.modeId) {
+      this.setData({ selectedModeId: Number(options.modeId) })
+    }
+    this.loadModes(); 
+    this.loadData() 
+  },
   onShow() { this.loadModes(); this.loadData() },
   formatTime(sec) {
     const s = Number(sec || 0)
@@ -29,9 +35,13 @@ Page({
       modes = Object.values(map)
     }
     let selectedModeId = this.data.selectedModeId
-    if (!selectedModeId && Array.isArray(modes) && modes.length) selectedModeId = modes[0].id
-    const sel = (Array.isArray(modes) ? modes : []).find(m => m.id === selectedModeId)
-    this.setData({ modes: Array.isArray(modes) ? modes : [], selectedModeId, selectedModeName: sel ? sel.name : '' })
+    const modeList = Array.isArray(modes) ? modes : []
+    let sel = modeList.find(m => m.id === selectedModeId)
+    if (!sel && modeList.length) {
+      selectedModeId = modeList[0].id
+      sel = modeList[0]
+    }
+    this.setData({ modes: modeList, selectedModeId, selectedModeName: sel ? sel.name : '' })
   },
   loadData() {
     const histAll = storage.training.getHistory()
@@ -95,4 +105,20 @@ Page({
     this.setData({ selectedModeId: id, selectedModeName: sel ? sel.name : '' })
     this.loadData()
   },
+  deleteItem(e) {
+    const id = Number(e.currentTarget.dataset.id)
+    if (!id) return
+    wx.showModal({
+      title: '删除记录',
+      content: '确定要删除这条训练记录吗？',
+      confirmColor: '#ef4444',
+      success: (res) => {
+        if (res.confirm) {
+          storage.training.removeHistoryByTs(id)
+          this.loadData()
+          wx.showToast({ title: '已删除', icon: 'none' })
+        }
+      }
+    })
+  }
 })

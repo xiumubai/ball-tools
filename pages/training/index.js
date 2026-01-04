@@ -2,7 +2,8 @@ const storage = require('../../utils/storage')
 Page({
   data: {
     modes: [],
-    newModeName: ''
+    newModeName: '',
+    totalSessions: 0
   },
   onLoad() {
     this.refreshModes()
@@ -12,7 +13,13 @@ Page({
   },
   refreshModes() {
     const list = storage.training.getModes()
-    this.setData({ modes: Array.isArray(list) ? list : [] })
+    const history = storage.training.getHistory()
+    const modes = (Array.isArray(list) ? list : []).map(m => {
+      const count = history.filter(h => h.modeId === m.id).length
+      return { ...m, count }
+    })
+    const totalSessions = history.length
+    this.setData({ modes, totalSessions })
   },
   onNameInput(e) {
     this.setData({ newModeName: e.detail.value })
@@ -22,8 +29,9 @@ Page({
     const reg = /^[\u4e00-\u9fa5A-Za-z0-9]{1,12}$/
     if (!reg.test(name)) { wx.showToast({ title: '支持中英文数字，最多12字', icon: 'none' }); return }
     const id = Date.now()
-    const list = storage.training.addMode({ id, name })
-    this.setData({ modes: list, newModeName: '' })
+    storage.training.addMode({ id, name })
+    this.setData({ newModeName: '' })
+    this.refreshModes()
     wx.showToast({ title: '已添加', icon: 'none' })
   },
   deleteMode(e) {
@@ -38,8 +46,8 @@ Page({
       confirmColor: '#ef4444',
       success: (res) => {
         if (res.confirm) {
-          const list = storage.training.removeMode(id)
-          this.setData({ modes: list })
+          storage.training.removeMode(id)
+          this.refreshModes()
           wx.showToast({ title: '已删除', icon: 'none' })
         }
       }
@@ -51,7 +59,9 @@ Page({
     if (!id) return
     wx.navigateTo({ url: `/pages/training/session?modeId=${id}&modeName=${encodeURIComponent(name)}` })
   },
-  goHistory() {
-    wx.navigateTo({ url: '/pages/training/history' })
+  goHistory(e) {
+    const id = e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.id
+    const url = id ? `/pages/training/history?modeId=${id}` : '/pages/training/history'
+    wx.navigateTo({ url })
   }
 })

@@ -14,7 +14,9 @@
 }
 
 .mode-chip {
-  display: inline-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 16rpx 32rpx;
   margin-right: 20rpx;
   background: var(--bg-card);

@@ -104,6 +104,9 @@ Page({
     wx.showToast({ title: '已重置', icon: 'none' })
   },
   persistCurrent() {
+    if (this.data.isRunning) {
+      this.setData({ runningSince: Date.now() })
+    }
     const payload = {
       modeId: this.data.modeId,
       modeName: this.data.modeName,
@@ -130,6 +133,12 @@ Page({
       this.setData({ hits: Number(hits || 0), misses: Number(misses || 0), hasStarted: !!hasStarted, isRunning: !!isRunning, elapsedTime: Number(elapsedTime || 0) })
     }
   },
-  onHide() { this.clearIntervalTick() },
+  onShow() {
+    this.restoreCurrent()
+  },
+  onHide() { 
+    this.persistCurrent()
+    this.clearIntervalTick() 
+  },
   onUnload() { this.clearIntervalTick() }
 })

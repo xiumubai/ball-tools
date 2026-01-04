@@ -58,7 +58,7 @@
     <view class="training-list">
       <block wx:if="{{modes.length}}">
         <block wx:for="{{modes}}" wx:key="id">
-          <view class="training-item">
+          <view class="training-item" bindtap="goHistory" data-id="{{item.id}}">
             <view class="training-info">
               <view class="training-icon">
                 <t-icon name="focus" size="40rpx" />
@@ -69,11 +69,11 @@
               </view>
             </view>
             <view class="training-actions">
-              <view class="enter-btn" bindtap="enterMode" data-id="{{item.id}}" data-name="{{item.name}}">
+              <view class="enter-btn" catchtap="enterMode" data-id="{{item.id}}" data-name="{{item.name}}">
                 <t-icon name="play-circle" size="28rpx" />
                 <text>进入训练</text>
               </view>
-              <view class="more-btn" bindtap="deleteMode" data-id="{{item.id}}" data-name="{{item.name}}">
+              <view class="more-btn" catchtap="deleteMode" data-id="{{item.id}}" data-name="{{item.name}}">
                 <t-icon name="close-circle" color="red" size="32rpx" />
               </view>
             </view>

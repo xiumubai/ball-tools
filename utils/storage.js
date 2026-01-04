@@ -118,7 +118,16 @@ const training = {
   setCurrent(obj) { if (obj == null) safeRemove(KEYS.trainingCurrent); else safeSet(KEYS.trainingCurrent, obj) },
   getHistory() { return ensureArray(safeGet(KEYS.trainingHistory) || []) },
   setHistory(list) { safeSet(KEYS.trainingHistory, Array.isArray(list) ? list : []) },
-  addHistory(record) { const hist = this.getHistory(); hist.push(record); safeSet(KEYS.trainingHistory, hist); return hist }
+  addHistory(record) { const hist = this.getHistory(); hist.push(record); safeSet(KEYS.trainingHistory, hist); return hist },
+  removeHistoryByTs(ts) {
+    const hist = this.getHistory()
+    const filtered = hist.filter(r => {
+      const t = r && (r.finishedAt || (r.finishedAtISO ? Date.parse(r.finishedAtISO) : 0))
+      return t !== ts
+    })
+    this.setHistory(filtered)
+    return filtered
+  }
 }
 
 module.exports = { keys: KEYS, get: safeGet, set: safeSet, remove: safeRemove, ongoing, eight, nine, rules, play, training, cleanupOrphans }
