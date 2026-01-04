@@ -63,7 +63,7 @@
           
           <view class="sessions-list">
             <block wx:for="{{item.sessions}}" wx:key="id" wx:for-item="subItem">
-              <view class="session-item">
+              <view class="session-item" bindlongpress="deleteSession" data-id="{{subItem.id}}">
                 <view class="session-time">
                   <view class="time-dot"></view>
                   <text class="time-range">{{subItem.start}} - {{subItem.end}}</text>

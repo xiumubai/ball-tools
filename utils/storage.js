@@ -106,7 +106,19 @@ const play = {
   setTotalSeconds(sec) { const n = Number(sec) || 0; safeSet(KEYS.playTotal, n) },
   getHistory() { return ensureArray(safeGet(KEYS.playHistory) || []) },
   setHistory(list) { safeSet(KEYS.playHistory, Array.isArray(list) ? list : []) },
-  addHistory(record) { const hist = this.getHistory(); hist.push(record); safeSet(KEYS.playHistory, hist); return hist }
+  addHistory(record) { const hist = this.getHistory(); hist.push(record); safeSet(KEYS.playHistory, hist); return hist },
+  removeHistoryByTs(ts) {
+    const hist = this.getHistory()
+    const filtered = hist.filter(r => r.startedAt !== ts)
+    this.setHistory(filtered)
+    
+    // Recalculate total time
+    let total = 0
+    filtered.forEach(r => total += Number(r.elapsedSeconds || 0))
+    this.setTotalSeconds(total)
+    
+    return filtered
+  }
 }
 
 const training = {

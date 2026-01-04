@@ -49,5 +49,21 @@ Page({
     }))
     const summary = { totalTimeText: this.formatTime(totalSec), totalSessions: totalCount }
     this.setData({ days, summary })
+  },
+  deleteSession(e) {
+    const id = Number(e.currentTarget.dataset.id)
+    if (!id) return
+    wx.showModal({
+      title: '删除记录',
+      content: '确定要删除这条打球记录吗？\n删除后将自动扣除对应的累计时长。',
+      confirmColor: '#ef4444',
+      success: (res) => {
+        if (res.confirm) {
+          storage.play.removeHistoryByTs(id)
+          this.loadData()
+          wx.showToast({ title: '已删除', icon: 'none' })
+        }
+      }
+    })
   }
 })
