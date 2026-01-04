@@ -92,6 +92,10 @@
       <!-- 桌面背景与边框装饰 (移出 movable-area) -->
       <!-- 台呢背景层，大小限制在台呢内部，偏移 borderWidth -->
       <view class="table-felt" style="width: {{tableInnerWidth}}px; height: {{tableInnerHeight}}px; position: absolute; left: {{borderWidth}}px; top: {{borderWidth}}px;">
+         <!-- 库边 Logo -->
+         <view class="cushion-logo logo-top">朽木白</view>
+         <view class="cushion-logo logo-bottom">朽木白</view>
+
          <!-- 6个袋口 -->
          <view class="pocket p-top-left"></view>
          <view class="pocket p-top-right"></view>

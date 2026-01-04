@@ -30,30 +30,45 @@ Page({
     const sys = wx.getSystemInfoSync();
     const winW = sys.windowWidth;
     const winH = sys.windowHeight;
-    const paddingX = 40; 
-    const paddingY = 60; 
-    const maxW = winW - paddingX;
-    const maxH = winH - paddingY;
-    let w, h;
-    if (maxW * 2 <= maxH) {
-      w = maxW;
-      h = w * 2;
-    } else {
-      h = maxH;
-      w = h / 2;
+    const paddingX = 40 * (winW / 750); // 左右留白
+    const paddingY = 60 * (winW / 750); // 上下留白
+    
+    // 标准尺寸 (mm)
+    const REAL_OUTER_W = 1550;
+    const REAL_OUTER_H = 2830;
+    const REAL_INNER_W = 1270;
+    const REAL_INNER_H = 2540;
+    
+    // 边框宽度 (单边)
+    const REAL_BORDER_W = (REAL_OUTER_W - REAL_INNER_W) / 2; // 140mm
+    // 实际上通常长边的边框和短边的边框宽度可能略有不同，但为了UI简化，这里统一处理，
+    // 或者严格按照比例计算。
+    // 既然给了外沿和内沿尺寸，我们优先保证内沿是 2:1 (2540/1270)，且外沿包裹内沿。
+    
+    // 屏幕可用最大区域
+    const maxW = winW - paddingX * 2;
+    const maxH = winH - paddingY * 2;
+    
+    // 计算缩放比例
+    // 尝试以宽度适配
+    let scale = maxW / REAL_OUTER_W;
+    // 如果高度超出了，则以高度适配
+    if (REAL_OUTER_H * scale > maxH) {
+      scale = maxH / REAL_OUTER_H;
     }
     
-    // 计算边框宽度 (30rpx -> px)
-    const borderWidth = 30 * (winW / 750);
-    const innerW = w - 2 * borderWidth;
-    const innerH = h - 2 * borderWidth;
-    
+    const tableWidth = REAL_OUTER_W * scale;
+    const tableHeight = REAL_OUTER_H * scale;
+    const borderWidth = REAL_BORDER_W * scale;
+    const tableInnerWidth = REAL_INNER_W * scale;
+    const tableInnerHeight = REAL_INNER_H * scale;
+
     this.setData({ 
-      tableWidth: w, 
-      tableHeight: h,
-      borderWidth: borderWidth,
-      tableInnerWidth: innerW,
-      tableInnerHeight: innerH
+      tableWidth, 
+      tableHeight,
+      borderWidth,
+      tableInnerWidth,
+      tableInnerHeight
     }, () => {
       // 在布局更新完成后初始化 Canvas
       setTimeout(() => {
