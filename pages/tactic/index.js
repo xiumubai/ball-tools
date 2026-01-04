@@ -54,10 +54,17 @@ Page({
       borderWidth: borderWidth,
       tableInnerWidth: innerW,
       tableInnerHeight: innerH
+    }, () => {
+      // 在布局更新完成后初始化 Canvas
+      setTimeout(() => {
+        this.initCanvas();
+      }, 300);
     });
   },
 
-  // ... (其余方法保持不变，initCanvas 需要用 tableInnerWidth/Height) ...
+  onReady() {
+    // 移除 initCanvas 调用，统一在 calculateTableSize 回调中执行
+  },
 
   initCanvas() {
     const query = wx.createSelectorQuery();
@@ -194,13 +201,31 @@ Page({
   },
 
   getCanvasPoint(e) {
-    const { x, y } = e.touches[0];
-    return { x: x - (this.canvasLeft || 0), y: y - (this.canvasTop || 0) };
+    const touch = e.touches[0];
+    const x = touch.clientX;
+    const y = touch.clientY;
+    return {
+      x: x - (this.canvasLeft || 0),
+      y: y - (this.canvasTop || 0)
+    };
+  },
+
+  updateCanvasRect() {
+    const query = wx.createSelectorQuery();
+    query.select('#drawCanvas').fields({ rect: true }).exec((res) => {
+      if (res[0]) {
+        this.canvasLeft = res[0].left;
+        this.canvasTop = res[0].top;
+      }
+    });
   },
 
   onCanvasTouchStart(e) {
     if (this.data.currentMode !== 'draw') return;
     this.saveHistory();
+    // 再次尝试更新 rect 以防偏移
+    this.updateCanvasRect();
+    
     const point = this.getCanvasPoint(e);
     const shape = this.data.drawShape;
     this.currentLine = { type: shape, color: 'red', width: 2, start: point, end: point, points: [point] };
