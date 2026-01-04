@@ -56,10 +56,10 @@
     <view class="card">
       <view class="warning-box">
         <t-icon name="error-circle" size="36rpx" class="icon" />
-        <text class="p">本应用采用离线模式，数据保存在本地存储中。清除浏览器缓存将导致数据丢失。</text>
+        <text class="p">本应用采用离线模式，数据保存在本地存储中。清除缓存将导致所有记录数据永久丢失。请谨慎操作！</text>
       </view>
       
-      <view class="menu-item" bindtap="handleDev">
+      <view class="menu-item" bindtap="onExportData">
         <view class="menu-icon amber">
           <t-icon name="download" size="40rpx" />
         </view>
@@ -70,7 +70,7 @@
         <t-icon name="chevron-right" size="40rpx" class="menu-arrow" />
       </view>
       
-      <view class="menu-item" bindtap="handleDev">
+      <view class="menu-item" bindtap="onImportData">
         <view class="menu-icon blue">
           <t-icon name="upload" size="40rpx" />
         </view>
