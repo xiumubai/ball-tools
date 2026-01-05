@@ -65,7 +65,18 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage() {
-    
+    return {
+      title: '追分王 - 记录暴击好兄弟的每一天',
+      path: '/pages/index/index',
+      imageUrl: '/images/nine.png'
+    }
+  },
+  onShareTimeline() {
+    return {
+      title: '追分王 - 记录暴击好兄弟的每一天',
+      query: '',
+      imageUrl: '/images/nine.png'
+    }
   },
   goMatchBall() {
     wx.switchTab({ url: '/pages/match/match' })
