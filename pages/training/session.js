@@ -79,6 +79,7 @@ Page({
     this.persistCurrent()
   },
   endSession() {
+    if (!this.data.hasStarted) { wx.showToast({ title: '请先点击开始', icon: 'none' }); return }
     const hits = Number(this.data.hits || 0)
     const misses = Number(this.data.misses || 0)
     const total = hits + misses
@@ -96,6 +97,7 @@ Page({
     wx.showToast({ title: '已保存训练记录', icon: 'none' })
   },
   restart() {
+    if (!this.data.hasStarted) { wx.showToast({ title: '请先点击开始', icon: 'none' }); return }
     this.clearIntervalTick()
     this.setData({ hasStarted: false, isRunning: false, runningSince: 0, elapsedTime: 0, hits: 0, misses: 0 })
     this.updateTimerText()
