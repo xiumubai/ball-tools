@@ -34,6 +34,38 @@ Page({
     this.refreshModes()
     wx.showToast({ title: '已添加', icon: 'none' })
   },
+  renameMode(e) {
+    const id = e.currentTarget.dataset.id
+    const name = e.currentTarget.dataset.name
+    
+    if (!id) return
+
+    wx.showModal({
+      title: '修改名称',
+      editable: true,
+      placeholderText: '请输入新的名称',
+      content: name,
+      success: (res) => {
+        if (res.confirm) {
+          const newName = (res.content || '').trim()
+          const reg = /^[\u4e00-\u9fa5A-Za-z0-9]{1,12}$/
+          
+          if (!newName) {
+             wx.showToast({ title: '名称不能为空', icon: 'none' })
+             return
+          }
+          if (!reg.test(newName)) {
+             wx.showToast({ title: '支持中英文数字，最多12字', icon: 'none' })
+             return
+          }
+          
+          storage.training.updateMode(id, newName)
+          this.refreshModes()
+          wx.showToast({ title: '已修改', icon: 'none' })
+        }
+      }
+    })
+  },
   deleteMode(e) {
     const id = e.currentTarget.dataset.id
     const name = e.currentTarget.dataset.name

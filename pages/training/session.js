@@ -92,7 +92,7 @@ Page({
     this.setData({ hasStarted: false, isRunning: false, runningSince: 0, elapsedTime: 0, hits: 0, misses: 0 })
     this.updateTimerText()
     this.updateAccuracy()
-    storage.training.setCurrent(null)
+    storage.training.setCurrentById(this.data.modeId, null)
     wx.showToast({ title: '已保存训练记录', icon: 'none' })
   },
   restart() {
@@ -100,7 +100,7 @@ Page({
     this.setData({ hasStarted: false, isRunning: false, runningSince: 0, elapsedTime: 0, hits: 0, misses: 0 })
     this.updateTimerText()
     this.updateAccuracy()
-    storage.training.setCurrent(null)
+    storage.training.setCurrentById(this.data.modeId, null)
     wx.showToast({ title: '已重置', icon: 'none' })
   },
   persistCurrent() {
@@ -117,10 +117,10 @@ Page({
       runningSince: this.data.runningSince,
       elapsedTime: this.data.elapsedTime
     }
-    storage.training.setCurrent(payload)
+    storage.training.setCurrentById(this.data.modeId, payload)
   },
   restoreCurrent() {
-    const saved = storage.training.getCurrent()
+    const saved = storage.training.getCurrentById(this.data.modeId)
     if (saved && saved.modeId === this.data.modeId) {
       let { hits, misses, hasStarted, isRunning, runningSince, elapsedTime } = saved
       if (isRunning && runningSince) {
@@ -140,5 +140,8 @@ Page({
     this.persistCurrent()
     this.clearIntervalTick() 
   },
-  onUnload() { this.clearIntervalTick() }
+  onUnload() { 
+    this.persistCurrent()
+    this.clearIntervalTick() 
+  }
 })

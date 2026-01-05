@@ -126,8 +126,26 @@ const training = {
   setModes(list) { safeSet(KEYS.trainingModes, Array.isArray(list) ? list : []) },
   addMode(mode) { const list = this.getModes(); list.push(mode); this.setModes(list); return list },
   removeMode(id) { const list = this.getModes().filter(m => m.id !== id); this.setModes(list); return list },
+  updateMode(id, name) {
+    const list = this.getModes().map(m => {
+      if (m.id === id) return { ...m, name }
+      return m
+    })
+    this.setModes(list)
+    return list
+  },
   getCurrent() { return safeGet(KEYS.trainingCurrent) || null },
   setCurrent(obj) { if (obj == null) safeRemove(KEYS.trainingCurrent); else safeSet(KEYS.trainingCurrent, obj) },
+  getCurrentById(id) {
+    if (!id) return this.getCurrent()
+    return safeGet(`${KEYS.trainingCurrent}_${id}`) || null
+  },
+  setCurrentById(id, obj) {
+    if (!id) return this.setCurrent(obj)
+    const k = `${KEYS.trainingCurrent}_${id}`
+    if (obj == null) safeRemove(k)
+    else safeSet(k, obj)
+  },
   getHistory() { return ensureArray(safeGet(KEYS.trainingHistory) || []) },
   setHistory(list) { safeSet(KEYS.trainingHistory, Array.isArray(list) ? list : []) },
   addHistory(record) { const hist = this.getHistory(); hist.push(record); safeSet(KEYS.trainingHistory, hist); return hist },

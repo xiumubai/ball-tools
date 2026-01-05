@@ -58,7 +58,7 @@
     <view class="training-list">
       <block wx:if="{{modes.length}}">
         <block wx:for="{{modes}}" wx:key="id">
-          <view class="training-item" bindtap="goHistory" data-id="{{item.id}}">
+          <view class="training-item" bindtap="goHistory" bindlongpress="renameMode" data-id="{{item.id}}" data-name="{{item.name}}">
             <view class="training-info">
               <view class="training-icon">
                 <t-icon name="focus" size="40rpx" />
