@@ -227,3 +227,59 @@
   font-size: 24rpx;
   color: var(--text-muted);
 }
+
+/* QR Code Modal */
+.qr-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.qr-container {
+  width: 80%;
+  max-width: 600rpx;
+  background: white;
+  padding: 32rpx;
+  border-radius: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 64rpx;
+}
+
+.qr-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12rpx;
+}
+
+.qr-tip {
+  margin-top: 24rpx;
+  font-size: 28rpx;
+  color: #666;
+  text-align: center;
+}
+
+.close-btn {
+  padding: 20rpx;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.close-btn:active {
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

@@ -101,6 +101,16 @@
       <text>关于</text>
     </view>
     <view class="card">
+      <view class="menu-item" bindtap="onShowContact">
+        <view class="menu-icon green">
+          <t-icon name="chat" size="40rpx" />
+        </view>
+        <view class="menu-content">
+          <view class="title">联系作者</view>
+          <view class="desc">意见反馈 / 找我打球</view>
+        </view>
+        <t-icon name="chevron-right" size="40rpx" class="menu-arrow" />
+      </view>
       <view class="info-item">
         <text class="label">当前版本</text>
         <text class="tag green">{{version}}</text>
@@ -119,5 +129,21 @@
   <!-- Footer -->
   <view class="footer">
     <text>Made with ♥ for billiard lovers</text>
+  </view>
+
+  <!-- 自定义二维码预览弹窗 -->
+  <view class="qr-modal" wx:if="{{showImagePreview}}" bindtap="onCloseImagePreview">
+    <view class="qr-container" catchtap="preventBubble">
+      <image 
+        src="{{previewImages[0]}}" 
+        mode="widthFix" 
+        show-menu-by-longpress="{{true}}" 
+        class="qr-image"
+      />
+      <view class="qr-tip">长按识别/保存二维码</view>
+    </view>
+    <view class="close-btn" catchtap="onCloseImagePreview">
+      <t-icon name="close-circle" size="64rpx" color="#fff" />
+    </view>
   </view>
 </view>

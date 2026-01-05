@@ -5,7 +5,9 @@ Page({
     version: 'v2.2.2',
     author: '朽木白',
     desc: '由一个台球爱好者开发',
-    totalPlayText: '00:00:00'
+    totalPlayText: '00:00:00',
+    showImagePreview: false,
+    previewImages: []
   },
 
   /**
@@ -209,8 +211,20 @@ Page({
     wx.navigateTo({ url: '/pages/tactic/index' })
   },
   onCopyRepo() {
-    wx.setClipboardData({ data: this.data.repoUrl, success: () => { wx.showToast({ title: '链接已复制', icon: 'none' }) } })
+    wx.setClipboardData({ data: this.data.repoUrl || 'https://github.com/xiumubai', success: () => { wx.showToast({ title: '链接已复制', icon: 'none' }) } })
   },
+  onShowContact() {
+    this.setData({
+      showImagePreview: true,
+      previewImages: ['/images/my_weixin.png']
+    })
+  },
+  onCloseImagePreview() {
+    this.setData({
+      showImagePreview: false
+    })
+  },
+  preventBubble() {},
 
   /**
    * 生命周期函数--监听页面隐藏

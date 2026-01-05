@@ -27,27 +27,19 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "images/zhongba.png",
-        "selectedIconPath": "images/zhongba_active.png"
+        "text": "首页"
       },
       {
         "pagePath": "pages/match/match",
-        "text": "比赛",
-        "iconPath": "images/zhongba.png",
-        "selectedIconPath": "images/zhongba_active.png"
+        "text": "比赛"
       },
       {
         "pagePath": "pages/history/history",
-        "text": "记录",
-        "iconPath": "images/zhongba.png",
-        "selectedIconPath": "images/zhongba_active.png"
+        "text": "记录"
       },
       {
         "pagePath": "pages/profile/profile",
-        "text": "我的",
-        "iconPath": "images/zhuifen.png",
-        "selectedIconPath": "images/zhuifen_active.png"
+        "text": "我的"
       }
     ]
   },

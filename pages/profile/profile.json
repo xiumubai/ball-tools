@@ -1,6 +1,7 @@
 {
   "usingComponents": {
     "t-button": "tdesign-miniprogram/button/button",
-    "t-icon": "tdesign-miniprogram/icon/icon"
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "t-image-viewer": "tdesign-miniprogram/image-viewer/image-viewer"
   }
 }
