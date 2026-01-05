@@ -26,7 +26,7 @@
               </view>
             </view>
             <view class="item-stats">
-              <text class="stat-text">次数 {{item.sessionsCount}}  时长 {{item.totalTimeText}}  进 {{item.hits}} / 丢 {{item.misses}}</text>
+              <text class="stat-text">总次数 {{item.sessionsCount}}  时长 {{item.totalTimeText}}  进 {{item.hits}} / 丢 {{item.misses}}</text>
               <text class="hit-rate">命中率 {{item.accuracyText}}</text>
             </view>
           </view>
@@ -42,22 +42,36 @@
 
   <!-- Training Details -->
   <view class="list-container" style="padding-bottom: 40rpx;">
-    <block wx:if="{{sessions.length}}">
-      <block wx:for="{{sessions}}" wx:key="id">
-        <view class="log-item" bindlongpress="deleteItem" data-id="{{item.id}}">
-          <view class="log-header">
-            <view class="badge">
-              <t-icon name="circle" size="28rpx" style="margin-right: 8rpx;" />
-              <text>{{item.modeName}}</text>
+    <block wx:if="{{dailyGroups.length}}">
+      <block wx:for="{{dailyGroups}}" wx:for-item="group" wx:key="date">
+        <view class="daily-group">
+          <!-- Daily Header -->
+          <view class="daily-header">
+            <view class="daily-title">
+              <text class="daily-date">{{group.date}}</text>
+              <text class="daily-modes" wx:if="{{group.modeNames}}">{{group.modeNames}}</text>
             </view>
-            <text class="log-time">{{item.date}} {{item.time}}</text>
+            <view class="daily-stats">
+              <text>总次数 {{group.totalSessions}}</text>
+              <text>时长 {{group.totalTimeText}}</text>
+              <text>进 {{group.totalHits}} / 丢 {{group.totalMisses}}</text>
+              <text>命中率 {{group.accuracyText}}</text>
+            </view>
           </view>
-          <view class="log-divider"></view>
-          <view class="log-details">
-            <view class="detail-item">时长 <text class="highlight">{{item.elapsedText}}</text></view>
-            <view class="detail-item">进 <text class="highlight">{{item.hits}}</text></view>
-            <view class="detail-item">失 <text class="highlight">{{item.misses}}</text></view>
-            <text class="hit-rate" style="margin-left: auto;">命中率 {{item.accuracyText}}</text>
+          
+          <!-- Sessions -->
+          <view class="daily-sessions">
+            <block wx:for="{{group.sessions}}" wx:key="id">
+              <view class="log-item" bindlongpress="deleteItem" data-id="{{item.id}}">
+                <view class="log-details">
+                  <view class="detail-item">时长 <text class="highlight">{{item.elapsedText}}</text></view>
+                  <view class="log-time">{{item.time}}</view>
+                  <view class="detail-item">进 <text class="highlight">{{item.hits}}</text></view>
+                  <view class="detail-item">失 <text class="highlight">{{item.misses}}</text></view>
+                  <text class="hit-rate" style="margin-left: auto;">命中率 {{item.accuracyText}}</text>
+                </view>
+              </view>
+            </block>
           </view>
         </view>
       </block>

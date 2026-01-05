@@ -32,10 +32,10 @@
         <t-icon name="calendar" size="36rpx" class="icon" />
         <text>历史记录</text>
       </view>
-      <view class="filter-btn">
+      <!-- <view class="filter-btn">
         <t-icon name="filter" size="28rpx" />
         <text>筛选</text>
-      </view>
+      </view> -->
     </view>
 
     <scroll-view scroll-y class="records-scroll" enable-flex>

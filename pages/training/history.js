@@ -65,6 +65,7 @@ Page({
         time,
         hits: Number(r.hits || 0),
         misses: Number(r.misses || 0),
+        elapsedSeconds: Number(r.elapsedSeconds || 0),
         elapsedText: this.formatTime(Number(r.elapsedSeconds || 0)),
         accuracyText: `${Math.round(((Number(r.hits||0)) / ((Number(r.hits||0)) + (Number(r.misses||0)) || 1)) * 100)}%`
       }
@@ -97,7 +98,48 @@ Page({
       }))
     })()
     const summary = { totalSessions, totalTimeText: this.formatTime(totalTime), totalHits, totalMisses, accuracyText: `${accuracy}%` }
-    this.setData({ sessions, summary, modesSummary })
+    
+    // Group by date
+    const groupsMap = {}
+    sessions.forEach(s => {
+      if (!groupsMap[s.date]) {
+        groupsMap[s.date] = {
+          date: s.date,
+          sessions: [],
+          totalHits: 0,
+          totalMisses: 0,
+          totalTimeSec: 0,
+          modeNames: new Set()
+        }
+      }
+      const g = groupsMap[s.date]
+      g.sessions.push(s)
+      g.totalHits += s.hits
+      g.totalMisses += s.misses
+      g.totalTimeSec += (s.elapsedSeconds || 0) // We need to make sure s has elapsedSeconds, let's check above
+      if (s.modeName) g.modeNames.add(s.modeName)
+    })
+
+    const dailyGroups = Object.values(groupsMap).sort((a, b) => {
+      // Sort by date desc
+      return b.date.localeCompare(a.date)
+    }).map(g => {
+      const modeNames = Array.from(g.modeNames).join(' / ')
+      const total = g.totalHits + g.totalMisses
+      const acc = total ? Math.round((g.totalHits / total) * 100) : 0
+      return {
+        date: g.date,
+        modeNames,
+        totalSessions: g.sessions.length,
+        totalTimeText: this.formatTime(g.totalTimeSec),
+        totalHits: g.totalHits,
+        totalMisses: g.totalMisses,
+        accuracyText: `${acc}%`,
+        sessions: g.sessions // sessions are already sorted by id desc in the loop above? No, sessions loop order depends on original list order.
+      }
+    })
+
+    this.setData({ sessions, summary, modesSummary, dailyGroups })
   },
   switchMode(e) {
     const id = Number(e.currentTarget.dataset.id)
